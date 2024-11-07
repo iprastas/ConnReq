@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Заявки - статистика";
+}
+
+<h3>@ViewBag.Title</h3>
+<var id="siteRoot" hidden="hidden">@Url.Content("~")</var>
+
+<div class="row">
+    <div class="col-md-3">
+        <div id="since" class="control" title="начало периода">
+            <input type="text" id="sincedp" value="01.01.@DateTime.Now.Year.ToString()" />
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div id="upto" class="control" title="окончание периода">
+            <input type="text" id="uptodp" value="31.12.@DateTime.Now.Year.ToString()" />
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div id="resourceKind" class="control" title="Виды ресурсов"></div>
+    </div>
+    <div class="col-md-3">
+        <div id="territory" class="control" title="Территории"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <input type="checkbox" class="checkbox" id="showEmpty" />
+    </div>
+    <div class="col-md-2">Скрыть пустые строки</div>
+</div>
+<div class="row">
+    <div id="grid" class="col-md-12"></div>
+</div>
+

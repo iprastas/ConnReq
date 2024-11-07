@@ -1,0 +1,50 @@
+﻿@model ConnReq.WebUI.Models.FactoryList
+@{
+    ViewBag.Title = "Реестр поставщиков";
+}
+@section scripts{
+    <script src="~/Scripts/myScripts/fixTable.js" ></script>   
+}
+<h2>@ViewBag.Title</h2>
+<div class="tableContainer" style="overflow:auto;height:550px;">
+    <table class="table-bordered" id="fixTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Обслуживает</th>
+                <th>ИНН</th>
+                <th>EMail</th>
+                <th>Сайт</th>
+                <th>Руководитель</th>
+                <th>Адрес</th>
+                <th>Работает с</th>
+                <th>Работает по</th>
+                <th>Тепло</th>
+                <th>Вода</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var p in Model.FactoryItems)
+            {
+                <tr>
+                    <td>@p.FactoryId</td>
+                    <td>@p.Name</td>
+                    <td>@p.TerritoryName</td>
+                    <td>@p.INN</td>
+                    <td>@p.EMail</td>
+                    <td>@p.WebSite</td>
+                    <td>@p.Chief</td>
+                    <td>@p.Address</td>
+                    <td>@p.Since</td>
+                    <td>@p.Upto</td>
+                    <td>@if (p.Warm) { @Html.Label("+")}</td>
+                    <td>@if (p.Water) { @Html.Label("+")}</td>
+                    <td>@Html.ActionLink("Изменить", "Edit","ProviderDetail",new { factory = p.FactoryId},new { @class= "glyphicon glyphicon-pencil btn btn-default" })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@Html.ActionLink("Добавить", "Edit", "ProviderDetail", new { factory = 0 }, new { @class = "glyphicon glyphicon-plus btn btn-default" })

@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Администрирование и аналитика";
+}
+<div class="jumbotron">
+    <p class="lead">Кабинет администратора</p>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h2>Управление пользователями</h2>
+        <p>
+           Основные функции:
+        </p>
+        <ul>
+            <li>Удаление неактивных пользователей</li>
+        </ul>
+        <p>@Html.ActionLink("Управление пользователями", "Users",null,new {@class= "btn btn-default" })</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Реестр поставщиков ресурсов</h2>
+        <p>
+            Ведение реестра поставщиков ресурсов:
+        </p>
+        <ul>
+            <li>Добавление новых поставщиков</li>
+            <li>Редактирование полей реестра</li>
+            <li>Блокирование поставщиков</li>
+        </ul>
+        <p>@Html.ActionLink("Реестр поставщиков", "Provider", null, new { @class = "btn btn-default" })</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Аналитика</h2>
+        <p>
+            Отчетные формы:
+        </p>
+        <ul>
+            <li>@Html.ActionLink("Статистика по заявкам", "RequestStat", null, new { @class = "btn btn-default" })</li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnReq.WebUI", "ConnReq.WebUI\ConnReq.WebUI.csproj", "{0DEE653E-DD17-4A8B-A68B-B6728F35FD28}"
+	ProjectSection(ProjectDependencies) = postProject
+		{207E084B-3C3E-4717-B8ED-7300548F8611} = {207E084B-3C3E-4717-B8ED-7300548F8611}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnReq.Domain", "ConnReq.Domain\ConnReq.Domain.csproj", "{207E084B-3C3E-4717-B8ED-7300548F8611}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DEE653E-DD17-4A8B-A68B-B6728F35FD28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DEE653E-DD17-4A8B-A68B-B6728F35FD28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DEE653E-DD17-4A8B-A68B-B6728F35FD28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DEE653E-DD17-4A8B-A68B-B6728F35FD28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{207E084B-3C3E-4717-B8ED-7300548F8611}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{207E084B-3C3E-4717-B8ED-7300548F8611}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{207E084B-3C3E-4717-B8ED-7300548F8611}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{207E084B-3C3E-4717-B8ED-7300548F8611}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {764478F2-DA40-4A2E-AD7B-E13D9600FB77}
+	EndGlobalSection
+EndGlobal

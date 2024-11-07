@@ -1,0 +1,41 @@
+﻿@model ConnReq.WebUI.Models.NotActiveList
+@{
+    ViewBag.Title = "Неактивные пользователи";
+}
+
+@section scripts{
+    <script src="~/Scripts/myScripts/fixTable.js"></script>
+}
+<h2>@ViewBag.Title</h2>
+@if (Model.NotActiveItems!=null&&Model.NotActiveItems.Count > 0) { 
+<div class="tableContainer" style="overflow:auto;height:550px;">
+    <table class="table-bordered" id="fixTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Наименование</th>
+                <th>Тип</th>
+                <th>Неактивен (дней)</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.NotActiveItems)
+            {
+                <tr>
+                    <td>@p.UserId</td>
+                    <td>@p.Name</td>
+                    <td>@p.CustomerType</td>
+                    <td>@p.NotActiveDays</td>
+                    <td>
+                        @Html.ActionLink("Удалить", "Delete", new { user = p.UserId }, new { @class = "glyphicon glyphicon-remove btn btn-default" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>    
+}
+else{
+<p>Нет неактивных пользователей</p>
+}
