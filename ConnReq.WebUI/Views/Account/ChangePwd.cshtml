@@ -1,0 +1,52 @@
+﻿@model ConnReq.Domain.Entities.ChangePwdModel
+@{
+	ViewBag.Title = "Изменить пароль";
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("ChangePwd", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-3">
+            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-md-3">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewPassword, new { @class = "col-md-2 control-label" })
+        <div class="col-md-3">
+            @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewPassword, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password2, new { @class = "col-md-2 control-label" })
+        <div class="col-md-3">
+            @Html.PasswordFor(m => m.Password2, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Password2, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            @if (Model.ErrorMsg != null && Model.ErrorMsg.Length > 0)
+            {
+                @Html.Label("ErrorMsg", Model.ErrorMsg, new { @class = "text-danger" })
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10" style="margin-top: 12px;">
+            <input type="submit" value="Изменить" class="btn btn-primary" />
+        </div>
+    </div>
+}

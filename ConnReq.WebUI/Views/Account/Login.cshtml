@@ -27,9 +27,9 @@
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" style="margin-top: 12px;">
                     <div class="col-md-2">
-                        <input type="submit" value="Выполнить вход" class="btn btn-primary" />
+                        <input type="submit" value="Войти" class="btn btn-primary" />
                     </div>
                 </div>
             }
@@ -37,9 +37,10 @@
 
     </div>
 </div>
-<p>Заказчикам необходимо пройти регистрацию.</p>
-<div class="row">
-    @Html.ActionLink("Регистрация", "Index", "Registration", null, new { @class = "btn btn-info col-md-2" })
-    @Html.ActionLink("Изменить пароль", "ChangePwd", "Account", null, new { @class = "btn btn-info col-md-2 offset-md-1" })
+<p style="margin-top: 12px;">Заказчикам необходимо пройти регистрацию.</p>
+<div class="d-grid gap-2 d-md-block">
+    @Html.ActionLink("Регистрация", "Index", "Registration", null, new { @class = "btn btn-outline-primary" })
+    @Html.ActionLink("Изменить пароль", "ChangePwd", "Account", null, new { @class = "btn btn-outline-primary" })
 </div>
+
 <div id="loading"></div>

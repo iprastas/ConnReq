@@ -75,6 +75,42 @@ namespace ConnReq.WebUI.Controllers
                 return View(model);
             }
         }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult LogOff()
+        //{
+        //    log.Info("LogOff user: " + User.Identity.Name + " , sessionId - " + HttpContext.Session.SessionID);
+        //    Request.Cookies.Clear();
+        //    FormsAuthentication.SignOut();
+        //    Session.Clear();
+        //    Session.Abandon();
+        //    return RedirectToAction("Login", "Account");
+        //}
 
+        [HttpGet]
+        public ActionResult ChangePwd()
+        {
+            ChangePwdModel model = new ChangePwdModel();
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePwd(ChangePwdModel model)
+        {
+            model.ErrorMsg = authProvider.PasswordChanged(model);
+            if (ModelState.IsValid && model.ErrorMsg == string.Empty)
+            {
+                return RedirectToRoute(new
+                {
+                    controller = "Account",
+                    action = "Login"
+                });
+            }
+            else
+            {
+                model.ErrorMsg = "Пользователь не зарегистрирован в БД!";
+				return View(model);
+            }
+        }
     }
 }
