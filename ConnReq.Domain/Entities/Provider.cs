@@ -9,9 +9,9 @@ namespace ConnReq.Domain.Entities
         [Required]
         [Display(Name="Предприятие*")]
 	    public string? Name { get; set; }
-        //[Display(Name="Работает в*")]
-        //[Required]
-        //public SelectListItem TerritoryWork { get; set; }
+        [Display(Name = "Работает в*")]
+        [Required]
+        public SelectList TerritoryWork { get; set; } 
         public int Territory { get; set; }
         public string? TerritoryName { get; set; }
         [Required]

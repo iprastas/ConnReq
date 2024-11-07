@@ -53,6 +53,10 @@ namespace ConnReq.Domain.Concrete
                                 data.Warm = reader.GetDecimal(10) == 1 ? true : false;
                             if (!reader.IsDBNull(11))
                                 data.Water = reader.GetDecimal(11) == 1 ? true : false;
+                            if (!reader.IsDBNull(12))
+                            {
+                                data.TerritoryWork = new SelectList(GetTerritory(), "Value", "Text", data.Territory);
+                            }
                         }
                     }
                     catch (NpgsqlException ex)
@@ -76,7 +80,7 @@ namespace ConnReq.Domain.Concrete
                 {
                     cmd.CommandText = "call resreq.updatefactoryprovider(:nfactory,:vname,:nterritory,:vinn,:vemail,:vwebsite,:vchief,:vaddress,:dsince,:dupto,:nwarm,:nwater)";
                     cmd.CommandType = CommandType.StoredProcedure;
-                    NpgsqlParameter f = new NpgsqlParameter(":nfactory", p.FactoryId);
+                    NpgsqlParameter f = new NpgsqlParameter(":nfactory", NpgsqlDbType.Integer); f.Value = p.FactoryId;
                     f.Direction = ParameterDirection.InputOutput;
                     cmd.Parameters.Add(f);
                     cmd.Parameters.Add(":vname", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Name) ? DBNull.Value : p.Name;
@@ -87,12 +91,12 @@ namespace ConnReq.Domain.Concrete
                     cmd.Parameters.Add(":vchief", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Chief) ? DBNull.Value : p.Chief;
                     cmd.Parameters.Add(":vaddress",  NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Address) ? DBNull.Value : p.Address;
                     cmd.Parameters.Add(":dsince", NpgsqlDbType.Date).Value = p.Since;
-                    cmd.Parameters.Add(":dupto", NpgsqlDbType.Date).Value = p.Upto;
-                    if (p.Warm) warm = 1;
-                    NpgsqlParameter pwarm = new NpgsqlParameter("nwarm", warm);
+                    cmd.Parameters.Add(":dupto", NpgsqlDbType.Date).Value = p.Upto is null ? DBNull.Value : p.Upto;
+                    if (p.Warm) warm = 1;   else warm=0;
+                    NpgsqlParameter pwarm = new NpgsqlParameter(":nwarm", NpgsqlDbType.Integer); pwarm.Value = warm;
                     cmd.Parameters.Add(pwarm);
-                    if (p.Water) water = 1;
-                    NpgsqlParameter pwater = new NpgsqlParameter("nwater",water);
+                    if (p.Water) water = 1; else water=0;
+                    NpgsqlParameter pwater = new NpgsqlParameter(":nwater",NpgsqlDbType.Integer); pwater.Value = water;
                     cmd.Parameters.Add(pwater);
                     try
                     {
