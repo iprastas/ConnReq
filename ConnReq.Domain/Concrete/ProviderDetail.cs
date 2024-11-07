@@ -115,7 +115,34 @@ namespace ConnReq.Domain.Concrete
         public List<ListItem> GetTerritory()
         {
             List<ListItem> list = new List<ListItem>();
-            
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using (NpgsqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "select t.territory,t.name from resreq.territory t order by nmb";
+                    try
+                    {
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ListItem item = new ListItem();
+                            if (!reader.IsDBNull(0))
+                                item.Value = reader.GetDecimal(0).ToString();
+                            if (!reader.IsDBNull(1))
+                                item.Text = reader.GetString(1);
+                            list.Add(item);
+                        }
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка GetTerritory: " + ex.ToString());
+                    }
+                    finally
+                    {
+                         cmd.Dispose();
+                    }
+                }
+            }
             return list;
         }
     }
