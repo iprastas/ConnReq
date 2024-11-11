@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
+using ConnReq.Domain;
+using Npgsql;
+using NpgsqlTypes;
 
 namespace ConnReq.WebUI.Controllers
 {
@@ -100,11 +103,23 @@ namespace ConnReq.WebUI.Controllers
             model.ErrorMsg = authProvider.PasswordChanged(model);
             if (ModelState.IsValid && model.ErrorMsg == string.Empty)
             {
-                return RedirectToRoute(new
+                using (NpgsqlConnection conn = PgDb.GetOpenConnection())
                 {
+                    using NpgsqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "update users SET password=:pwd,changedate=:chdt where login=:lg;";
+                    cmd.Parameters.Add(":pwd", NpgsqlDbType.Varchar).Value = model.Password2;
+                    cmd.Parameters.Add(":chdt", NpgsqlDbType.Date).Value = DateTime.Now;
+                    cmd.Parameters.Add(":lg", NpgsqlDbType.Varchar).Value = model.UserName;
+
+                    cmd.ExecuteNonQuery();
+
+                    conn.Close();
+                }
+                 return RedirectToRoute(new
+                 {
                     controller = "Account",
                     action = "Login"
-                });
+                 });
             }
             else
             {
