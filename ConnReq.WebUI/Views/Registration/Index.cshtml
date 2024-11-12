@@ -1,0 +1,107 @@
+﻿@model ConnReq.Domain.Entities.UserSettings
+@{
+    ViewBag.Title = "Регистрация";
+}
+
+<h3>@ViewBag.Title</h3>
+
+<div class="row">
+    <div class="col-md-8">
+        <section id="RegForm">
+            @using (Html.BeginForm("Index", "Registration", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password2, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.PasswordFor(m => m.Password2, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.EMail, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.EMail, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.EMail, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Typeofcustomer", "Юридическое лицо*", new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.RadioButtonFor(m => m.Typeofcustomer, ConnReq.Domain.Entities.CustomerType.Factory, new { @class = "col-md-2 control-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Typeofcustomer", "ИП*", new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.RadioButtonFor(m => m.Typeofcustomer, ConnReq.Domain.Entities.CustomerType.IndivEntr, new { @class = "col-md-2 control-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Typeofcustomer", "Физическое лицо*", new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.RadioButtonFor(m => m.Typeofcustomer, ConnReq.Domain.Entities.CustomerType.Individual, new { @class = "col-md-2 control-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("FactoryName", "Наименование организации или ФИО*", new { @class = "col-md-5 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.FactoryName, new { @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <hr/>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Inn, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Inn, new { @class = "col-md-4 control-label" })
+                        @Html.ValidationMessageFor(m => m.Inn, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Зарегистрировать" class="btn btn-primary"/>
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var siteRoot = $("#siteRoot").html();
+        if (siteRoot === "/") siteRoot = "";
+        $('input#UserName').blur(function () {
+            var user = $('input#UserName').val();
+            $.ajax({
+                type: 'POST',
+                url: siteRoot + '/Registration/CheckUser',
+                data: 'user=' + user,
+                success: function (msg) {
+                    if (msg === '') return;
+                    alert(msg);
+                    $('input#UserName').val('');
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.responseText);
+                }
+            });
+        });
+    });
+</script>

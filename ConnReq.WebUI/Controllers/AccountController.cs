@@ -25,7 +25,7 @@ namespace ConnReq.WebUI.Controllers
             LoginViewModel model = new LoginViewModel();
             return View(model);
         }
-                [HttpPost]
+        [HttpPost]
         public ActionResult Login(LoginViewModel model)
         {
             UserSettings settings = authProvider.Authenticate(model);
@@ -106,7 +106,7 @@ namespace ConnReq.WebUI.Controllers
                 using (NpgsqlConnection conn = PgDb.GetOpenConnection())
                 {
                     using NpgsqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "update users SET password=:pwd,changedate=:chdt where login=:lg;";
+                    cmd.CommandText = "update resreq.users SET password=:pwd,changedate=:chdt where login=:lg;";
                     cmd.Parameters.Add(":pwd", NpgsqlDbType.Varchar).Value = model.Password2;
                     cmd.Parameters.Add(":chdt", NpgsqlDbType.Date).Value = DateTime.Now;
                     cmd.Parameters.Add(":lg", NpgsqlDbType.Varchar).Value = model.UserName;

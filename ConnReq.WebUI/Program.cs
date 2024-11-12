@@ -16,6 +16,7 @@ namespace ConnReq.WebUI
             builder.Services.AddScoped<IAuthProvider, AuthProvider>();
             builder.Services.AddScoped<IAdminProvider, AdminProvider>();
             builder.Services.AddScoped<IProviderDetail, ProviderDetail>();
+            builder.Services.AddScoped<IRegistrationProvider, RegistrationProvider>();
             
             builder.Services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(24*60);
