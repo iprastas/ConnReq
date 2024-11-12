@@ -1,7 +1,10 @@
-﻿using ConnReq.Domain.Abstract;
+﻿using ConnReq.Domain;
+using ConnReq.Domain.Abstract;
 using ConnReq.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Npgsql;
 
 namespace ConnReq.WebUI.Controllers
 {
@@ -23,6 +26,24 @@ namespace ConnReq.WebUI.Controllers
         [HttpPost]
         public ActionResult Index(UserSettings model)
         {
+            using NpgsqlConnection checkName = PgDb.GetOpenConnection();
+            using NpgsqlCommand name = checkName.CreateCommand();
+            name.CommandText = $"select count(*) from resreq.users where login='{model.UserName}';";
+            Npgsql.NpgsqlDataReader reader = name.ExecuteReader();
+            int resN = -1;
+            while (reader.Read())
+            {
+                resN = reader.GetInt32(0);
+            }
+            name.Dispose();
+            checkName.Close();
+
+            if (resN != 0)
+            {
+                model.ErrorMessage = $"Пользователь {model.UserName} уже зарегистрирован! Выберете другое имя.";
+                return View(model);
+            }
+            
             if (ModelState.IsValid && provider.Registr(model))
             {
                 return RedirectToRoute(new
@@ -35,13 +56,6 @@ namespace ConnReq.WebUI.Controllers
             {
                 return View(model);
             }
-        }
-        [HttpPost]
-        public string CheckUser(string user)
-        {
-            if (provider.IsUserNameValid(user))
-                return string.Empty;
-            else return "Пользователь " + user + " уже зарегистрирован! Выберете другое имя.";
         }
     }
 }

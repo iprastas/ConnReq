@@ -44,6 +44,7 @@ namespace ConnReq.Domain.Entities
         public UserType TypeOfUser { get; set; }
         public bool IsValid { get; set; }
         public int User { get; set; }
+        public string? ErrorMessage { get; set; }
         public UserSettings() {
             IsValid = false;
             Typeofcustomer =  CustomerType.Factory;

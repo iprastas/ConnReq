@@ -9,33 +9,35 @@ namespace ConnReq.Domain.Concrete
     {
         public bool Registr(UserSettings settings)
         {
+            
+
             using NpgsqlConnection conn = PgDb.GetOpenConnection();
             using NpgsqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "insert into resreq.users(login,name,inn,email,password,typeofcustomer,typeofuser,changedate) "
-                + " values(trim(:login),trim(:name),:inn,:email,:password,:isIndividual,:typeofuser,:changedate)";
-            cmd.Parameters.Add("login", NpgsqlDbType.Varchar); cmd.Parameters["login"].Value = settings.UserName;
-            cmd.Parameters.Add("name", NpgsqlDbType.Varchar); cmd.Parameters["name"].Value = settings.FactoryName;
-            cmd.Parameters.Add("inn", NpgsqlDbType.Varchar); cmd.Parameters["inn"].Value = settings.Inn;
-            cmd.Parameters.Add("email", NpgsqlDbType.Varchar); cmd.Parameters["email"].Value = settings.EMail;
-            cmd.Parameters.Add("password", NpgsqlDbType.Varchar); cmd.Parameters["password"].Value = settings.Password;
-            cmd.Parameters.Add("typeofcustomer", NpgsqlDbType.Integer);
+                + "values(trim(:l),trim(:n),:inn,:e,:p,:tc,:tu,:cd)";
+            cmd.Parameters.Add(":l", NpgsqlDbType.Varchar).Value = settings.UserName;
+            cmd.Parameters.Add(":n", NpgsqlDbType.Varchar).Value = settings.FactoryName;
+            cmd.Parameters.Add(":inn", NpgsqlDbType.Varchar).Value = settings.Inn != null ? settings.Inn : DBNull.Value; ;
+            cmd.Parameters.Add(":e", NpgsqlDbType.Varchar).Value = settings.EMail;
+            cmd.Parameters.Add(":p", NpgsqlDbType.Varchar).Value = settings.Password;
+            cmd.Parameters.Add(":tс", NpgsqlDbType.Integer);
             switch (settings.Typeofcustomer)
             {
                 case CustomerType.Factory:
-                    cmd.Parameters["typeofcustomer"].Value = 1;
+                    cmd.Parameters[":tс"].Value = 1;
                     break;
                 case CustomerType.IndivEntr:
-                    cmd.Parameters["typeofcustomer"].Value = 2;
+                    cmd.Parameters[":tс"].Value = 2;
                     break;
                 case CustomerType.Individual:
-                    cmd.Parameters["typeofcustomer"].Value = 3;
+                    cmd.Parameters[":tс"].Value = 3;
                     break;
                 default:
-                    cmd.Parameters["typeofcustomer"].Value = 0;
+                    cmd.Parameters[":tс"].Value = 0;
                     break;
             }
-            cmd.Parameters.Add("typeofuser", NpgsqlDbType.Integer); cmd.Parameters["typeofuser"].Value = 3;
-            cmd.Parameters.Add("changedate", NpgsqlDbType.Date); cmd.Parameters["changedate"].Value = DateTime.Now;
+            cmd.Parameters.Add(":tu", NpgsqlDbType.Integer).Value = 3;
+            cmd.Parameters.Add(":cd", NpgsqlDbType.Date).Value = DateTime.Now;
 
             try
             {
