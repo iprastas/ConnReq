@@ -10,11 +10,11 @@
 
 @if (Model.RequestItems != null && Model.RequestItems.Count<ConnReq.Domain.Entities.RequestData>() > 0)
 {
-    <div class="row">
+    <div>
         <input type="checkbox" id="showAll" checked="checked" /> показать все/только необработанные
     </div>
-    <div class="row tableContainer" style="overflow:auto;height:500px;">
-        <table class="table-bordered" id="fixTable">
+    <div class="row tableContainer" style="overflow:auto;height:600px;">
+        <table class="table table-bordered table-hover" id="fixTable">
             <thead>
                 <tr>
                     <th>№</th>
@@ -53,21 +53,21 @@
                         }
                         <td>@p.Remarks</td>
                         <td>
-                            <a href='@Url.Action("Index", "Response", new { request = p.Request })' title="Ответить" class="btn btn-default">
-                                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                            <a href='@Url.Action("Index", "Response", new { request = p.Request })' title="Ответить" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-envelope" aria-hidden="true">Ответить</span>
                             </a>
                             @if (p.CanDeleted)
                             {
-                                <a href='@Url.Action("Remove", "Provider", new { request = p.Request })' title="Аннулировать заявку" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                <a href='@Url.Action("Remove", "Provider", new { request = p.Request })' title="Аннулировать заявку" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true">Аннулировать заявку</span>
                                 </a>
                             }
                         </td>
                         <td>
                             @if (p.DocCount > 0)
                             {
-                                <a href='@Url.Action("DownloadFiles", new { request = p.Request })' title="Загрузить архив документов" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                <a href='@Url.Action("DownloadFiles", new { request = p.Request })' title="Загрузить архив документов" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-download" aria-hidden="true">Загрузить</span>
                                 </a>
                             }
                         </td>
