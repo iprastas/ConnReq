@@ -28,7 +28,7 @@
                     <td>@p.CustomerType</td>
                     <td>@p.NotActiveDays</td>
                     <td>
-                        @Html.ActionLink("Удалить", "Delete", new { user = p.UserId }, new { @class = "glyphicon glyphicon-remove btn btn-danger" })
+                        @Html.ActionLink("Удалить", "Delete", "Admin", new { user = p.UserId }, new { @class = "glyphicon glyphicon-remove btn btn-danger" })
                     </td>
                 </tr>
             }
