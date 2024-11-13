@@ -41,7 +41,7 @@
                     <td>@p.Upto</td>
                     <td>@if (p.Warm) { @Html.Label("+")}</td>
                     <td>@if (p.Water) { @Html.Label("+")}</td>
-                    <td>@Html.ActionLink("Изменить", "Edit","ProviderDetail",new { factory = p.FactoryId},new { @class= "glyphicon glyphicon-pencil btn btn-danger" })</td>
+                    <td>@Html.ActionLink("Изменить", "Edit","ProviderDetail",new { factory = p.FactoryId},new { @class= "glyphicon glyphicon-pencil btn btn-success" })</td>
                 </tr>
             }
         </tbody>
