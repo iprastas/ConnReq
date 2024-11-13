@@ -274,10 +274,11 @@ namespace ConnReq.Domain.Concrete
                         + ",resreq.contractreqcount(:since,:upto,:rkind,f.factory)"
                         + ",resreq.overduereqcount(:since,:upto,:rkind,f.factory)"
                         + ",resreq.annulreqcount(:since,:upto,:rkind,f.factory)"
-                        + " from resreq.factory f,resreq.provider p where f.factory=p.factory"
-                        + " and p.RESOURCEKIND=decode(:rkind,0,p.RESOURCEKIND,:rkind)"
-                        + " and f.territorywork=decode(:terr,0,f.territorywork,3,f.territorywork,:terr)"
-                        + " order by 2";
+                        + " from resreq.factory f,resreq.provider p where f.factory=p.factory";
+                    if(kind!=0) cmd.CommandText += " and p.RESOURCEKIND = :rkind";
+                    if(terrWork==0) cmd.CommandText += " and f.territorywork = 3";
+                    else cmd.CommandText += " and f.territorywork=:terr";
+                        cmd.CommandText += " order by 2";
                         cmd.Parameters.Add("since", NpgsqlDbType.Date).Value = since;
                         cmd.Parameters.Add("upto", NpgsqlDbType.Date).Value = upto;
                         cmd.Parameters.Add("rkind", NpgsqlDbType.Integer).Value = kind;
