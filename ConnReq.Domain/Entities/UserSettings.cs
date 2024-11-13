@@ -17,12 +17,12 @@ namespace ConnReq.Domain.Entities
         public static string cookieName = "UserSettings";
         [Required(ErrorMessage = "Имя пользователя обязательно!")]
         [Display(Name = "Имя пользователя*")]
-        public string? UserName { get; set; }
+        public string UserName { get; set; }="";
         [Required(ErrorMessage = "Пароль обязателен!")]
         [DataType(DataType.Password)]
         [StringLength(20, MinimumLength = 6, ErrorMessage = "Пароль должен содержать не менее 6 символов")]
         [Display(Name = "Пароль*")]
-        public string? Password { get; set; }
+        public string Password { get; set; } ="";
         [Required(ErrorMessage = "Подтверждение пароля обязательно!")]
         [DataType(DataType.Password)]
         [Display(Name = "Подтверждение пароля*")]
@@ -31,12 +31,12 @@ namespace ConnReq.Domain.Entities
         [Required(ErrorMessage = "Почтовый адрес обязателен!")]
         [EmailAddress]
         [Display(Name = "e-mail*")]
-        public string? EMail { get; set; }
+        public string EMail { get; set; } ="";
         [Required]
         public CustomerType Typeofcustomer { get; set; }
         [Required(ErrorMessage = "Наименование организации обязательно!")]
         [Display(Name = "Наименование организации")]
-        public string? FactoryName { get; set; }
+        public string FactoryName { get; set; } = "";
         [Display(Name ="ИНН")]
         [StringLength(12, MinimumLength = 0, ErrorMessage = "Длина ИНН 12 символов!")]
         public string? Inn { get; set; }
@@ -54,16 +54,18 @@ namespace ConnReq.Domain.Entities
         {
             UserName = name;
             IsValid = false;
+            EMail = "";
+            FactoryName = "";
             Typeofcustomer = CustomerType.Factory;
             TypeOfUser = UserType.Customer;
         }
         public void Save(HttpResponse response)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("userName=" + UserName);
-            sb.Append("&email=" + EMail);
+            StringBuilder sb = new();
+            sb.Append("userName=" + UserName.Trim());
+            sb.Append("&email=" + EMail.Trim());
             sb.Append("&typeofcustomer=" + ((int)Typeofcustomer).ToString());
-            sb.Append("&factoryname=" + FactoryName);
+            sb.Append("&factoryname=" + FactoryName.Trim());
             sb.Append("&inn=" + Inn);
             sb.Append("&factory=" + Factory.ToString());
             sb.Append("&typeofuser=" + ((int)TypeOfUser).ToString());
