@@ -25,6 +25,12 @@ namespace ConnReq.WebUI
                 options.Cookie.IsEssential = true;
             });
             builder.Services.AddMemoryCache();
+             builder.Services.AddMvc().AddJsonOptions(o =>
+                {
+                    o.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    o.JsonSerializerOptions.IncludeFields = true;
+                    o.JsonSerializerOptions.DictionaryKeyPolicy =  System.Text.Json.JsonNamingPolicy.CamelCase;
+                });
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options => 
             {

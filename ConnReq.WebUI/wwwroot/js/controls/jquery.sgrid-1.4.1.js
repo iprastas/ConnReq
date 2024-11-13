@@ -10,6 +10,7 @@
     var max_recursive_calls = 10000;
     var headerNames = [];
     var filterColumn = '';
+    var requestParamStr = '';
     var browserIE = false;
     var varRowForm = false;
     const CellType = Object.freeze({
@@ -227,18 +228,25 @@
         getIdForm: function () { return idForm; },
         /* Get started form ID */
         getStartFormId: function () { return startForm; },
+         /**доп. параметры в форме ?a=val&b=v...
+        */
+        setParams: function (paramStr) {
+            requestParamStr = paramStr;
+        },
         /* Create form */
         setForm: function (id,row,col) {
              var $this = $(this);
             $this.sgrid('clearForm');
             $this.sgrid('setIdForm', id);
-            let geturl = $this.sgrid('getSettings', 'root') + $this.sgrid('getSettings', 'geturl');
+                       var u = $this.sgrid('getSettings', 'root') + $this.sgrid('getSettings', 'geturl');
+            if (requestParamStr.length > 0)
+                u += requestParamStr;
              return $.ajax({
                 async: true,
                 type: "GET",
-                data: 'id=' + id + '&r=' + row + '&c=' + col,
+                //data: 'id=' + id + '&r=' + row + '&c=' + col,
                 cache: false,
-                url: geturl,
+                url: u,
                 success: function (formData) {
                     var readOnly = $this.sgrid('getSettings', 'readOnly');
                     if (formData.VarRowCount) varRowForm = true;
@@ -879,6 +887,23 @@
                 return true;
             });
         },
+        hideEmptyRows: function (columns) {
+            var $this = $(this);
+            var rows = $('tbody tr', $this);
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i]; var hide = true;
+                var tds = $('td', $(row));
+                for (var j = 0; j < columns.length; j++) {
+                    var html = $(tds[columns[j]]).html();
+                    if (!(html === '0' || html === '')) { hide = false; break;}
+                }
+                if (hide) $(rows[i]).attr('hidden', 'hidden');
+            }
+        },
+        showAllRow: function () {
+            var $this = $(this);
+            $('tbody tr', $this).removeAttr('hidden');
+        }
     };
     /* sgrid plugin */
     $.fn.sgrid = function (method) {

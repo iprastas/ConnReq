@@ -276,7 +276,7 @@ namespace ConnReq.Domain.Concrete
                         + ",resreq.annulreqcount(:since,:upto,:rkind,f.factory)"
                         + " from resreq.factory f,resreq.provider p where f.factory=p.factory";
                     if(kind!=0) cmd.CommandText += " and p.RESOURCEKIND = :rkind";
-                    if(terrWork==0) cmd.CommandText += " and f.territorywork = 3";
+                    if(terrWork==3) cmd.CommandText += " and f.territorywork = f.territorywork";
                     else cmd.CommandText += " and f.territorywork=:terr";
                         cmd.CommandText += " order by 2";
                         cmd.Parameters.Add("since", NpgsqlDbType.Date).Value = since;

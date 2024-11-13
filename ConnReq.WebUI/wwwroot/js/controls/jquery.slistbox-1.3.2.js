@@ -79,7 +79,7 @@
             return;
         }
         for (var i = 0; i < dt.length; i++) {
-            var opt = $('<option>').attr('value', dt[i].value).html(dt[i].text).appendTo(sel);
+            var opt = $('<option>').attr('value', dt[i].Value).html(dt[i].Text).appendTo(sel);
             if (dt[i].Selected === true) opt.prop('selected', 'selected');
             if (dt[i].Enabled === false) opt.prop('disabled', "disabled");
         }
