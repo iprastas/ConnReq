@@ -2,7 +2,7 @@
     ViewBag.Title = "Администрирование и аналитика";
 }
 <div class="jumbotron">
-    <p class="lead">Кабинет администратора</p>
+    <h1 class="display-6">Кабинет администратора</h1>
 </div>
 <div class="row">
     <div class="col-md-4">
@@ -13,7 +13,7 @@
         <ul>
             <li>Удаление неактивных пользователей</li>
         </ul>
-        <p>@Html.ActionLink("Управление пользователями", "Users",null,new {@class= "btn btn-default" })</p>
+        @Html.ActionLink("Управление пользователями", "Users", "Admin", null, new { @class = "btn btn-primary" })
     </div>
     <div class="col-md-4">
         <h2>Реестр поставщиков ресурсов</h2>
@@ -25,7 +25,7 @@
             <li>Редактирование полей реестра</li>
             <li>Блокирование поставщиков</li>
         </ul>
-        <p>@Html.ActionLink("Реестр поставщиков", "Provider", null, new { @class = "btn btn-default" })</p>
+        @Html.ActionLink("Реестр поставщиков", "Provider", "Admin", null, new { @class = "btn btn-primary" })
     </div>
     <div class="col-md-4">
         <h2>Аналитика</h2>
@@ -33,7 +33,7 @@
             Отчетные формы:
         </p>
         <ul>
-            <li>@Html.ActionLink("Статистика по заявкам", "RequestStat", null, new { @class = "btn btn-default" })</li>
+            @Html.ActionLink("Статистика по заявкам", "RequestStat", "Admin", null, new { @class = "btn btn-primary" })
         </ul>
     </div>
 </div>

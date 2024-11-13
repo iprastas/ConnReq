@@ -6,8 +6,8 @@
     <script src="~/Scripts/myScripts/fixTable.js" ></script>   
 }
 <h2>@ViewBag.Title</h2>
-<div class="tableContainer" style="overflow:auto;height:550px;">
-    <table class="table-bordered" id="fixTable">
+<div class="tableContainer" style="overflow:auto;height:600px;">
+    <table class="table table-bordered table-hover" id="fixTable">
         <thead>
             <tr>
                 <th>ID</th>
@@ -41,10 +41,12 @@
                     <td>@p.Upto</td>
                     <td>@if (p.Warm) { @Html.Label("+")}</td>
                     <td>@if (p.Water) { @Html.Label("+")}</td>
-                    <td>@Html.ActionLink("Изменить", "Edit","ProviderDetail",new { factory = p.FactoryId},new { @class= "glyphicon glyphicon-pencil btn btn-default" })</td>
+                    <td>@Html.ActionLink("Изменить", "Edit","ProviderDetail",new { factory = p.FactoryId},new { @class= "glyphicon glyphicon-pencil btn btn-danger" })</td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-@Html.ActionLink("Добавить", "Edit", "ProviderDetail", new { factory = 0 }, new { @class = "glyphicon glyphicon-plus btn btn-default" })
+<button class="btn" style="margin-top: 15px;">
+    @Html.ActionLink("Добавить", "Edit", "ProviderDetail", new { factory = 0 }, new { @class = "glyphicon glyphicon-plus btn btn-primary" })
+</button>
