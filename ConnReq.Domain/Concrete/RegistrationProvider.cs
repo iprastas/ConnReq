@@ -13,13 +13,13 @@ namespace ConnReq.Domain.Concrete
 
             using NpgsqlConnection conn = PgDb.GetOpenConnection();
             using NpgsqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "insert into resreq.users(login,name,inn,email,password,typeofcustomer,typeofuser,changedate) "
-                + "values(trim(:l),trim(:n),:inn,:e,:p,:tc,:tu,:cd)";
+            cmd.CommandText = "insert into resreq.users(login,name,inn,email,password,typeofcustomer,typeofuser) "
+                + " values(trim(:l),trim(:n),:inn,:em,:pwd,:tc,:tu)";
             cmd.Parameters.Add(":l", NpgsqlDbType.Varchar).Value = settings.UserName;
             cmd.Parameters.Add(":n", NpgsqlDbType.Varchar).Value = settings.FactoryName;
             cmd.Parameters.Add(":inn", NpgsqlDbType.Varchar).Value = settings.Inn != null ? settings.Inn : DBNull.Value; ;
-            cmd.Parameters.Add(":e", NpgsqlDbType.Varchar).Value = settings.EMail;
-            cmd.Parameters.Add(":p", NpgsqlDbType.Varchar).Value = settings.Password;
+            cmd.Parameters.Add(":em", NpgsqlDbType.Varchar).Value = settings.EMail;
+            cmd.Parameters.Add(":pwd", NpgsqlDbType.Varchar).Value = settings.Password;
             cmd.Parameters.Add(":tс", NpgsqlDbType.Integer);
             switch (settings.Typeofcustomer)
             {
@@ -37,7 +37,7 @@ namespace ConnReq.Domain.Concrete
                     break;
             }
             cmd.Parameters.Add(":tu", NpgsqlDbType.Integer).Value = 3;
-            cmd.Parameters.Add(":cd", NpgsqlDbType.Date).Value = DateTime.Now;
+//            cmd.Parameters.Add(":cd", NpgsqlDbType.Date).Value = DateTime.Now;
 
             try
             {

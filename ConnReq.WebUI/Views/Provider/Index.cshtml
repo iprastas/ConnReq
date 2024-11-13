@@ -1,0 +1,83 @@
+﻿@model ConnReq.WebUI.Models.RequestList
+@{
+    ViewBag.Title = "Заявки";
+}
+@section scripts {
+    <script src="~/Scripts/myScripts/fixTable.js"></script>
+    <script src="~/Scripts/myScripts/hideShowRow.js"></script>
+}
+<h3>@ViewBag.Title</h3>
+
+@if (Model.RequestItems != null && Model.RequestItems.Count<ConnReq.Domain.Entities.RequestData>() > 0)
+{
+    <div class="row">
+        <input type="checkbox" id="showAll" checked="checked" /> показать все/только необработанные
+    </div>
+    <div class="row tableContainer" style="overflow:auto;height:500px;">
+        <table class="table-bordered" id="fixTable">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th title="Дата подачи заявки">От</th>
+                    <th title="Вид ресурса">Ресурс</th>
+                    <th title="Наименование заказчика">От кого</th>
+                    <th title="Число прикрепленных документов">Документов</th>
+                    <th title="Дата последнего изменения заказчиком">Изменено</th>
+                    <th title="Входящий поставщика">Входящий</th>
+                    <th title="Дата регистрации заявки">От</th>
+                    <th title="Дата подписания договора">Договор к</th>
+                    <th title="Замечания поставщика, для устранения">Замечания</th>
+                    <th>Ответить</th>
+                    <th>Загрузить</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.RequestItems)
+                {
+                    <tr>
+                        <td>@p.Request</td>
+                        <td>@p.OutgoingDate.ToString("dd.MM.yyyy")</td>
+                        <td>@p.ResourceName</td>
+                        <td>@p.Organisation</td>
+                        <td>@p.DocCount</td>
+                        <td>@p.LastUpdate</td>
+                        <td>@p.IncomingNum</td>
+                        <td>@string.Format("{0:dd.MM.yyyy}", p.IncomingDate)</td>
+                        @if (p.ContractDate != null)
+                        {
+                            <td class="contract-date">@string.Format("{0:dd.MM.yyyy}", p.ContractDate)</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        <td>@p.Remarks</td>
+                        <td>
+                            <a href='@Url.Action("Index", "Response", new { request = p.Request })' title="Ответить" class="btn btn-default">
+                                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                            </a>
+                            @if (p.CanDeleted)
+                            {
+                                <a href='@Url.Action("Remove", "Provider", new { request = p.Request })' title="Аннулировать заявку" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </a>
+                            }
+                        </td>
+                        <td>
+                            @if (p.DocCount > 0)
+                            {
+                                <a href='@Url.Action("DownloadFiles", new { request = p.Request })' title="Загрузить архив документов" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <h3>Нет заявок на подключение</h3>
+}

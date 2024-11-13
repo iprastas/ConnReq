@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -70,53 +71,56 @@ namespace ConnReq.Domain.Concrete
         }
         public byte[] GetDocumentsStream(int request)
         {
-            byte[] bytes = new byte[1024];
-            //int nmb = 0;
-            //string name = string.Empty;
-            //using(NpgsqlConnection conn = PgDb.GetOpenConnection())
-            //{
-            //    using(NpgsqlCommand cmd = conn.CreateCommand()) {
-            //        cmd.CommandText = "select ordernmb,docname,document from resreq.requestdoc where request=:request";
-            //        cmd.Parameters.Add(":request", NpgsqlDbType.Integer).Value = request;
-            //        var os = new MemoryStream();
-            //        try
-            //        {
-            //            NpgsqlDataReader reader = cmd.ExecuteReader();
-            //            using (var zip = new ZipFile(Encoding.UTF8)) {
-            //                //zip.AlternateEncoding = Encoding.GetEncoding(Console.OutputEncoding.CodePage);
-            //                //zip.AlternateEncodingUsage = ZipOption.AsNecessary;
-            //                while (reader.Read())
-            //                {
-            //                    if (!reader.IsDBNull(0))
-            //                        nmb = (int)reader.GetDecimal(0);
-            //                    if (!reader.IsDBNull(1))
-            //                        name = reader.GetString(1);
-            //                    if (!reader.IsDBNull(2))
-            //                        blob = reader.GetOracleBlob(2);
-            //                    blob.Flush();
-            //                    string fname = string.Format("{0}_{1}_{2}", request, nmb, name);
-            //                    zip.AddEntry(fname, new MemoryStream(blob.Value));
-            //                }
-            //                zip.Save(os);
-            //                os.Position = 0;
-            //                byte[] bytes = new byte[os.Length];
-            //                bytes = os.ToArray();
-            //                os.Dispose();
-            //                return bytes;
-            //            }
-            //        }
-            //        catch(NpgsqlException ex)
-            //        {
-            //            throw new MyException(ex.ErrorCode, "Ошибка GetDocumentsStream: " + ex.ToString());
-            //        }
-            //        finally
-            //        {
-            //            cmd.Dispose();
-            //        }
-            //   }
-           
-            //}
-            return bytes;
+            int nmb = 0;
+            string name = string.Empty;
+            using (NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using (NpgsqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "select ordernmb,docname,document from resreq.requestdoc where request=:request";
+                    cmd.Parameters.Add(":request", NpgsqlDbType.Integer).Value = request;
+                    var os = new MemoryStream();
+                    try
+                    {
+                        int maxlen =1024*1024*10;
+                        byte[]? bytes = new byte[maxlen];
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+                        long bytesRead=0;
+                        //var zip = ZipFile(Encoding.UTF8);
+                        //{
+                            //zip.AlternateEncoding = Encoding.GetEncoding(Console.OutputEncoding.CodePage);
+                            //zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                            while (reader.Read())
+                            {
+                                if (!reader.IsDBNull(0))
+                                    nmb = (int)reader.GetDecimal(0);
+                                if (!reader.IsDBNull(1))
+                                    name = reader.GetString(1);
+                                if (!reader.IsDBNull(2))
+                                    bytesRead = reader.GetBytes(2,0,bytes,0,maxlen);
+                                //blob.Flush();
+                                string fname = string.Format("{0}_{1}_{2}", request, nmb, name);
+                                //zip.AddEntry(fname, new MemoryStream(blob.Value));
+                            }
+                            //zip.Save(os);
+                            os.Position = 0;
+                            //byte[] bytes = new byte[os.Length];
+                            bytes = os.ToArray();
+                            os.Dispose();
+                            return bytes;
+                        //}
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка GetDocumentsStream: " + ex.ToString());
+                    }
+                    finally
+                    {
+                        cmd.Dispose();
+                    }
+                }
+            }
+               
         }
         public string GetCustomerName(int request)
         {
