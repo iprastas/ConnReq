@@ -1,9 +1,10 @@
-﻿
-$(function () {
+﻿$(function () {
     var resKind = 0;
     var terr = 3;
     var siteRoot = $("#siteRoot").html();
     if (siteRoot === "/") siteRoot = "";
+    var since = $('#sincedp').val();
+    var upto = $('#uptodp').val();
     var resourceKind = $("#resourceKind").slistbox({ url: siteRoot + '/Admin/GetResourceKind' });
     var territory = $("#territory").slistbox({ url: siteRoot + '/Admin/GetTerritory' });
     var grid = $("#grid").sgrid({

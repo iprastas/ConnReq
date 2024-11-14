@@ -1,9 +1,12 @@
 ﻿
 @{
     ViewBag.Title = "Заявки - статистика";
+    Layout = "_Layout";
 }
 <var id="siteRoot" hidden="hidden">@Url.Content("~")</var>
 <section>
+    <script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
+    <script src="~/Scripts/myScripts/fixTable.js"></script>
     <script src="~/js/requestStat.js" type="text/javascript" asp-append-version="true"></script>
 </section>
 
