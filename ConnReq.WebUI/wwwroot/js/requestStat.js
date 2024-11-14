@@ -1,14 +1,9 @@
-﻿var siteRoot = $("#siteRoot").html();
-if (siteRoot === "/") siteRoot = "";
+﻿
 $(function () {
-    //$.datepicker.setDefaults($.datepicker.regional['ru']);
-    //var since = $('#sincedp').val();
-    //$("#sincedp").datepicker();
-    //var upto = $('#uptodp').val();
-    //$("#uptodp").datepicker();
     var resKind = 0;
     var terr = 3;
-
+    var siteRoot = $("#siteRoot").html();
+    if (siteRoot === "/") siteRoot = "";
     var resourceKind = $("#resourceKind").slistbox({ url: siteRoot + '/Admin/GetResourceKind' });
     var territory = $("#territory").slistbox({ url: siteRoot + '/Admin/GetTerritory' });
     var grid = $("#grid").sgrid({
@@ -20,10 +15,7 @@ $(function () {
         readOnly: true
     });
     grid.on('formReady.sgrid', function () {
-        //spinner.stop();
         $('table.scroll').tableHeadFixer({ 'left': 2 });
-        //spinner.stop();
-        //postData();
     });
     $("#sincedp").on('change', function (event) {
         since = $(event.target).val();

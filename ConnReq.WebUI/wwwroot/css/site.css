@@ -24,6 +24,17 @@ body {
 .form-group {
     margin-bottom: 15px;
 }
+.container {
+    margin-left: 0px;
+    margin-right: 0px;
+    /*increase width as per your need*/
+    max-width: 1800px;
+    max-height: 80vh;
+}
+.sgrid_container {
+    height: 75vh;
+    width: 100%;
+}
 table {
     border-width: 0;
     margin: 0;

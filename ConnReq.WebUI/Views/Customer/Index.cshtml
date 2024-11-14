@@ -7,7 +7,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="~/Scripts/myScripts/deleteDlg.js"></script>
 }
-<var id="siteRoot" hidden="hidden">@(Html.Raw(HttpRuntime.AppDomainAppVirtualPath))</var>
+<var id="siteRoot" hidden="hidden">@Url.Content("~")</var>
 <h3>@ViewBag.Title</h3>
 @if (Model.RequestItems.Count<ConnReq.Domain.Entities.RequestData>() > 0)
 {

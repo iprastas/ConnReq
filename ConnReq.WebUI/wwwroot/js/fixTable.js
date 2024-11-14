@@ -1,4 +1,3 @@
-﻿//$(document).ready(function () {
-$(function () { 
+﻿$(function () { 
     $("#fixTable").tableHeadFixer({ "left": 2 });
 });

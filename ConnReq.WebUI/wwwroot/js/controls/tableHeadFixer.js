@@ -29,7 +29,7 @@
             setCorner();
             $(settings.parent).trigger("scroll");
 
-            $(window).resize(function () {
+            $(window).on('resize',function () {
                 $(settings.parent).trigger("scroll");
             });
 
