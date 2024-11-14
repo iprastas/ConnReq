@@ -116,7 +116,34 @@ namespace ConnReq.Domain.Concrete
         }
         public string GetRequestName(int request)
         {
-            return DB.GetRequestName(request);
+            string ret = string.Empty;
+            using NpgsqlConnection conn = PgDb.GetOpenConnection();
+            using NpgsqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "select ' №'||request||' от '||to_char(outgoingdate,'DD.MM.YYYY')  from resreq.request r where request=:request";
+            cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
+            NpgsqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    ret = reader.GetString(0);
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new MyException(ex.ErrorCode, "Ошибка GetRequestName: " + ex.ToString());
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }
+                cmd.Dispose();
+            }
+            return ret;
         }
     }
 }
