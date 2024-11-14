@@ -10,9 +10,9 @@
     var max_recursive_calls = 10000;
     var headerNames = [];
     var filterColumn = '';
-    var requestParamStr = '';
     var browserIE = false;
     var varRowForm = false;
+    var requestParamStr = '';
     const CellType = Object.freeze({
         Empty: 0,
         Number: 1,
@@ -226,27 +226,25 @@
         setIdForm: function (id) { idForm = id; },
         /* get ID current form  */
         getIdForm: function () { return idForm; },
-        /* Get started form ID */
-        getStartFormId: function () { return startForm; },
-         /**доп. параметры в форме ?a=val&b=v...
-        */
         setParams: function (paramStr) {
             requestParamStr = paramStr;
         },
+        /* Get started form ID */
+        getStartFormId: function () { return startForm; },
         /* Create form */
         setForm: function (id,row,col) {
              var $this = $(this);
             $this.sgrid('clearForm');
             $this.sgrid('setIdForm', id);
-                       var u = $this.sgrid('getSettings', 'root') + $this.sgrid('getSettings', 'geturl');
+            let geturl = $this.sgrid('getSettings', 'root') + $this.sgrid('getSettings', 'geturl');
             if (requestParamStr.length > 0)
-                u += requestParamStr;
+                geturl += requestParamStr;
              return $.ajax({
                 async: true,
                 type: "GET",
                 //data: 'id=' + id + '&r=' + row + '&c=' + col,
                 cache: false,
-                url: u,
+                url: geturl,
                 success: function (formData) {
                     var readOnly = $this.sgrid('getSettings', 'readOnly');
                     if (formData.VarRowCount) varRowForm = true;

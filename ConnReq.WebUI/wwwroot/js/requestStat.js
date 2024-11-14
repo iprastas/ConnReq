@@ -36,6 +36,7 @@
         postData();
     });
     function postData() {
+         $('table.scroll').tableHeadFixer({ 'left': 2 });
         grid.sgrid('setParams', '?t=' + terr + '&kind=' + resKind + '&snc=' + since + '&upt=' + upto);
         grid.sgrid('setForm', 0).then(function () {
             if ($('#showEmpty').is(':checked')) {

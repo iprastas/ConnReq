@@ -80,7 +80,7 @@ namespace ConnReq.WebUI.Controllers
         [HttpGet]
         public JsonResult GetForm(int t = 0, int kind = 0, string snc="", string upt="" )
         {
-            DateTime d1 = new DateTime(DateTime.Now.Year,1,1), d2 = new DateTime(DateTime.Now.Year,12,31);
+            DateTime d1 = new DateTime(DateTime.Now.Year, 1,1), d2 = new DateTime(DateTime.Now.Year,12,31);
             if(snc!=string.Empty) DateTime.TryParse(snc, out d1);
             if (upt != string.Empty) DateTime.TryParse(upt, out d2);
             var ret = Json(provider.GetForm(t,kind,d1,d2));

@@ -17,7 +17,8 @@
                 }, param || {}
             );
 
-            settings.table  = this;
+            settings.table = this;
+            $(this).css('border-collapse', 'inherit');
             settings.parent = $(settings.table).parent();
             setParent();
 
@@ -50,7 +51,7 @@ set corner cells z-index 1 more then other fixed cells
                     }
 
                     if (settings.right > 0) {
-                        var tr = table.find("thead tr");
+                        tr = table.find("thead tr");
                         tr.each(function (k, row) {
                             solveRightColspan(row, function (cell) {
                                 $(cell).css("z-index", settings['z-index'] + 1);
@@ -61,7 +62,7 @@ set corner cells z-index 1 more then other fixed cells
 
                 if (settings.foot) {
                     if (settings.left > 0) {
-                        var tr = table.find("tfoot tr");
+                        tr = table.find("tfoot tr");
                         tr.each(function (k, row) {
                             solverLeftColspan(row, function (cell) {
                                 $(cell).css("z-index", settings['z-index']);
@@ -70,7 +71,7 @@ set corner cells z-index 1 more then other fixed cells
                     }
 
                     if (settings.right > 0) {
-                        var tr = table.find("tfoot tr");
+                        tr = table.find("tfoot tr");
                         tr.each(function (k, row) {
                             solveRightColspan(row, function (cell) {
                                 $(cell).css("z-index", settings['z-index']);
@@ -91,8 +92,7 @@ set corner cells z-index 1 more then other fixed cells
                         'overflow-x': 'auto',
                         'overflow-y': 'auto'
                     });
-
-                parent.scroll(function () {
+                parent.on('scroll',function () {
                     var scrollWidth  = parent[0].scrollWidth;
                     var clientWidth  = parent[0].clientWidth;
                     var scrollHeight = parent[0].scrollHeight;
@@ -115,19 +115,21 @@ set corner cells z-index 1 more then other fixed cells
 
                 setBackground(cells);
                 cells.css({
-                    'position': 'relative'
+                    'position': 'relative',
+                    'background-clip': 'padding-box'
                 });
             }
 
             // Set table foot fixed
             function fixFoot() {
                 var tfoot = $(settings.table).find("tfoot");
-                var tr    = tfoot.find("tr");
+                //var tr    = tfoot.find("tr");
                 var cells = tfoot.find("tr > *");
 
                 setBackground(cells);
                 cells.css({
-                    'position': 'relative'
+                    'position': 'relative',
+                    'background-clip': 'padding-box'
                 });
             }
 
@@ -145,11 +147,12 @@ set corner cells z-index 1 more then other fixed cells
 
                 var column = settings.leftColumns;
                 column.each(function (k, cell) {
-                    var cell = $(cell);
+                    cell = $(cell);
 
                     setBackground(cell);
                     cell.css({
-                        'position': 'relative'
+                        'position': 'relative',
+                        'background-clip': 'padding-box'
                     });
                 });
             }
@@ -169,10 +172,11 @@ set corner cells z-index 1 more then other fixed cells
 
                 var column = settings.rightColumns;
                 column.each(function (k, cell) {
-                    var cell = $(cell);
+                    cell = $(cell);
                     setBackground(cell);
                     cell.css({
-                        'position': 'relative'
+                        'position': 'relative',
+                        'background-clip': 'padding-box'
                     });
                 });
             }
@@ -180,14 +184,14 @@ set corner cells z-index 1 more then other fixed cells
             // Set fixed cells backgrounds
             function setBackground(elements) {
                 elements.each(function (k, element) {
-                    var element = $(element);
+                    element = $(element);
                     var parent  = $(element).parent();
 
                     var elementBackground = element.css("background-color");
-                    elementBackground     = (elementBackground == "transparent" || elementBackground == "rgba(0, 0, 0, 0)") ? null : elementBackground;
+                    elementBackground     = elementBackground === "transparent" || elementBackground === "rgba(0, 0, 0, 0)" ? null : elementBackground;
 
                     var parentBackground = parent.css("background-color");
-                    parentBackground     = (parentBackground == "transparent" || parentBackground == "rgba(0, 0, 0, 0)") ? null : parentBackground;
+                    parentBackground     = parentBackground === "transparent" || parentBackground === "rgba(0, 0, 0, 0)" ? null : parentBackground;
 
                     var background = parentBackground ? parentBackground : "white";
                     background     = elementBackground ? elementBackground : background;
@@ -228,15 +232,6 @@ set corner cells z-index 1 more then other fixed cells
         }
     };
 })(jQuery);
-/*  cellPos jQuery plugin
- ---------------------
- Get visual position of cell in HTML table (or its block like thead).
- Return value is object with "top" and "left" properties set to row and column index of top-left cell corner.
- Example of use:
- $("#myTable tbody td").each(function(){
- $(this).text( $(this).cellPos().top +", "+ $(this).cellPos().left );
- });
- */
 (function ($) {
     /* scan individual table and set "cellPos" data in the form { left: x-coord, top: y-coord } */
     function scanTable($table) {
@@ -247,8 +242,8 @@ set corner cells z-index 1 more then other fixed cells
                     cspan = $cell.attr("colspan") | 0,
                     rspan = $cell.attr("rowspan") | 0,
                     tx, ty;
-                cspan     = cspan ? cspan : 1;
-                rspan     = rspan ? rspan : 1;
+                cspan = cspan ? cspan : 1;
+                rspan = rspan ? rspan : 1;
                 for (; m[y] && m[y][x]; ++x);  //skip already occupied cells in current row
                 for (tx = x; tx < x + cspan; ++tx) {  //mark matrix elements occupied by current cell with true
                     for (ty = y; ty < y + rspan; ++ty) {
@@ -258,7 +253,7 @@ set corner cells z-index 1 more then other fixed cells
                         m[ty][tx] = true;
                     }
                 }
-                var pos = {top: y, left: x};
+                var pos = { top: y, left: x };
                 $cell.data("cellPos", pos);
             });
         });
@@ -267,12 +262,12 @@ set corner cells z-index 1 more then other fixed cells
     /* plugin */
     $.fn.cellPos = function (rescan) {
         var $cell = this.first(),
-            pos   = $cell.data("cellPos");
+            pos = $cell.data("cellPos");
         if (!pos || rescan) {
             var $table = $cell.closest("table, thead, tbody, tfoot");
             scanTable($table);
         }
         pos = $cell.data("cellPos");
         return pos;
-    }
+    };
 })(jQuery);
