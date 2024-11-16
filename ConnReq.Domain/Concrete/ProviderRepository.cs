@@ -1,9 +1,11 @@
 ﻿using ConnReq.Domain.Abstract;
 using ConnReq.Domain.Entities;
 using Npgsql;
+using Npgsql.Internal;
 using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
@@ -80,55 +82,80 @@ namespace ConnReq.Domain.Concrete
                     cmd.CommandText = "select ordernmb,docname,document from resreq.requestdoc where request=:request";
                     cmd.Parameters.Add(":request", NpgsqlDbType.Integer).Value = request;
                     var os = new MemoryStream();
-                    try
-                    {
-                        int maxlen =1024*1024*10;
-                        byte[]? bytes = new byte[maxlen];
-                        NpgsqlDataReader reader = cmd.ExecuteReader();
-                        long bytesRead=0;
-                        //var zip = ZipFile(Encoding.UTF8);
-                        //{
-                            //zip.AlternateEncoding = Encoding.GetEncoding(Console.OutputEncoding.CodePage);
-                            //zip.AlternateEncodingUsage = ZipOption.AsNecessary;
-                            while (reader.Read())
-                            {
-                                if (!reader.IsDBNull(0))
-                                    nmb = (int)reader.GetDecimal(0);
-                                if (!reader.IsDBNull(1))
-                                    name = reader.GetString(1);
-                                if (!reader.IsDBNull(2))
-                                    bytesRead = reader.GetBytes(2,0,bytes,0,maxlen);
-                                //blob.Flush();
-                                string fname = string.Format("{0}_{1}_{2}", request, nmb, name);
-                                //zip.AddEntry(fname, new MemoryStream(blob.Value));
+                        try
+                        {
+                            int maxlen =1024*1024*10;
+                            byte[]? bytes = new byte[maxlen];
+                            NpgsqlDataReader reader = cmd.ExecuteReader();
+                            long bytesRead=0;
+                            using (var archive = new ZipArchive(os, ZipArchiveMode.Create, true)){
+                                while (reader.Read())
+                                {
+                                    if (!reader.IsDBNull(0))
+                                        nmb = (int)reader.GetDecimal(0);
+                                    if (!reader.IsDBNull(1))
+                                        name = reader.GetString(1);
+                                    if (!reader.IsDBNull(2))
+                                        bytesRead = reader.GetBytes(2,0,bytes,0,maxlen);
+                                    string fname = string.Format("{0}_{1}_{2}", request, nmb, name);
+                                    var entry = archive.CreateEntry(fname);
+                                    using (Stream writer = entry.Open())
+                                    {
+                                        writer.Write(bytes,0,(int)bytesRead);
+                                   
+                                    }
+                                }
+                                os.Position = 0;
+                                bytes = os.ToArray();
+                                //os.Dispose();
+                                return bytes;
                             }
-                            //zip.Save(os);
-                            os.Position = 0;
-                            //byte[] bytes = new byte[os.Length];
-                            bytes = os.ToArray();
-                            os.Dispose();
-                            return bytes;
-                        //}
-                    }
-                    catch (NpgsqlException ex)
-                    {
-                        throw new MyException(ex.ErrorCode, "Ошибка GetDocumentsStream: " + ex.ToString());
-                    }
-                    finally
-                    {
-                        cmd.Dispose();
-                    }
+                        }
+                         catch (NpgsqlException ex)
+                        {
+                            throw new MyException(ex.ErrorCode, "Ошибка GetDocumentsStream: " + ex.ToString());
+                        }
+                        finally
+                        {
+                            cmd.Dispose();
+                        }
                 }
             }
-               
         }
         public string GetCustomerName(int request)
         {
-            return "";//DB.GetCustomerName(request);
+            string name = string.Empty;
+            using (NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using (NpgsqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "select trim(substr(u.login,1,30)) from resreq.request r,resreq.users u where r.USERS=u.USERS and r.request=:request";
+                    cmd.Parameters.Add(":request",NpgsqlDbType.Integer).Value = request;
+                    using(NpgsqlDataReader reader = cmd.ExecuteReader()){ 
+                        if (reader.Read())  name = reader.GetString(0);
+                        
+                    }
+                }
+            }
+            return name;
         }
         public void Delete(int request)
         {
-            //DB.DeleteRequest(request);
+             using (NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using (NpgsqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "update resreq.request r set deleted=1 where r.request=:request";
+                    cmd.Parameters.Add(":request",NpgsqlDbType.Integer).Value = request;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (NpgsqlException ex) {
+                        throw new MyException(ex.ErrorCode, "Ошибка DeleteRequest: " + ex.ToString());
+                    }
+                }
+            }
         }
     }
 }
