@@ -9,7 +9,7 @@ namespace ConnReq.WebUI.Controllers
     [Authorize]
     public class RequestDocController : Controller
     {
-        IRequestDocProvider provider = null;
+        IRequestDocProvider provider;
         public RequestDocController(IRequestDocProvider p)
         {
             provider = p;

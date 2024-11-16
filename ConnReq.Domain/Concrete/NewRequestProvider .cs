@@ -1,0 +1,306 @@
+﻿using ConnReq.Domain.Abstract;
+using ConnReq.Domain.Entities;
+using Npgsql;
+using NpgsqlTypes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace ConnReq.Domain.Concrete
+{
+        public class NewRequestProvider : INewRequestProvider
+        {
+        public List<ListItem> GetResourceKind()
+        {
+            List<ListItem> list = new List<ListItem>();
+            int kind = 0; string name = string.Empty;
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using(NpgsqlCommand cmd = conn.CreateCommand()) 
+                { 
+                    cmd.CommandText = "select resourcekind,name from resreq.resourcekind order by 1";
+                    cmd.Parameters.Add("resourcekind", NpgsqlDbType.Integer).Value =  kind;
+                    cmd.Parameters.Add("name", NpgsqlDbType.Varchar).Value = name;
+                    NpgsqlDataReader reader;
+                    try
+                    {
+                        ListItem item0 = new ListItem() {Value="",Text="Все", Selected = true };
+                        list.Add(item0);
+                        reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ListItem item = new ListItem();
+                            if (!reader.IsDBNull(0))
+                                item.Value = reader.GetDecimal(0).ToString();
+                            if (!reader.IsDBNull(1))
+                                item.Text = reader.GetString(1);
+                            list.Add(item);
+                        }
+                    }
+                    catch(NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка GetResourseKind: " + ex.ToString());
+                    }
+                    finally
+                    {
+                        cmd.Dispose();
+                    }
+                }    
+            }
+            return list;
+        }
+        public List<ListItem> GetProviders(int resourceKind,int territory)
+        {
+            List<ListItem> list = new List<ListItem>();
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using(NpgsqlCommand cmd = conn.CreateCommand()) 
+                { 
+                    StringBuilder sb = new StringBuilder("select p.provider,f.name||' ('||k.name||')'");
+                    sb.Append(" from resreq.provider p,resreq.factory f, resreq.resourceKind k");
+                    sb.Append(" where p.factory = f.factory and p.resourcekind = k.resourcekind"
+                    + " and trunc(sysdate) between trunc(nvl(f.since,sysdate)) and trunc(nvl(f.upto,sysdate))");
+                    if (resourceKind > 0) { 
+                        sb.Append(" and p.resourcekind = :resourcekind");
+                        cmd.Parameters.Add("resourcekind", NpgsqlDbType.Integer).Value =  resourceKind;
+                    }
+                    if (territory > 0)
+                    {
+                        sb.Append(" and f.TERRITORYWORK=:territory");
+                        cmd.Parameters.Add("territory", NpgsqlDbType.Integer).Value = territory;
+                    }
+                    sb.Append(" order by 2");
+                    cmd.CommandText = sb.ToString();
+                    try
+                    {
+                        list.Add(new ListItem() { Value = "", Text = "Выберите поставщика", Selected = true });
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ListItem item = new ListItem();
+                            if (!reader.IsDBNull(0))
+                                item.Value = reader.GetDecimal(0).ToString();
+                            if (!reader.IsDBNull(1))
+                                item.Text = reader.GetString(1);
+                            list.Add(item);
+                        }
+                        reader.Close();
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка GetProviders: " + ex.ToString());
+                    }
+                    finally {
+                        cmd.Dispose();
+                    }
+                }
+            }
+            return list;
+        }
+        public List<ListItem> GetTerritory()
+        {
+            List<ListItem> list = new List<ListItem>();
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using(NpgsqlCommand cmd = conn.CreateCommand()) 
+                { 
+                    cmd.CommandText = "select t.territory,t.name from resreq.territory t order by nmb";
+                    try
+                    {
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ListItem item = new ListItem();
+                            if (!reader.IsDBNull(0))
+                                item.Value = reader.GetDecimal(0).ToString();
+                            if (!reader.IsDBNull(1))
+                                item.Text = reader.GetString(1);
+                            list.Add(item);
+                        }
+                        reader.Close();
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка GetTerritory: " + ex.ToString());
+                    }
+                    finally
+                    {
+                        cmd.Dispose();
+                    }
+                }
+            }
+            return list;
+        }
+        public List<DocTempl> GetDocuments( int customerType, int request)
+        {
+            List<DocTempl> documents = new List<DocTempl>();
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using(NpgsqlCommand cmd = conn.CreateCommand()) 
+                {
+                    cmd.CommandText = "select d.ordernmb,d.name from resreq.REQUESTDOCTEMPL d,resreq.request r,resreq.provider p "
+                        + " where r.provider = p.provider and d.resourcekind = p.resourcekind and r.request = :request "
+                        + " and d.typeofcustomer = :typeOfCustomer order by d.ordernmb";
+                    cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
+                    cmd.Parameters.Add("typeOfCustomer", NpgsqlDbType.Integer).Value = customerType;
+                    try
+                    {
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+                
+                        while (reader.Read())
+                        {
+                            DocTempl item = new DocTempl();
+                            if (!reader.IsDBNull(0))
+                                item.OrderNmb = (int)reader.GetDecimal(0);
+                            if (!reader.IsDBNull(1))
+                                item.Text = reader.GetString(1);
+                            documents.Add(item);
+                        }
+                        reader.Close();
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка GetDocumentsList: " + ex.ToString());
+                    }
+                    finally
+                    {
+                        cmd.Dispose();
+                    }
+                }
+            }
+            return documents;
+
+        }
+        public int SaveRequest(int customer,int provider,string userName)
+        {
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using(NpgsqlCommand cmd = conn.CreateCommand()) 
+                {
+                    cmd.CommandText = "insert into resreq.request(outgoingdate,provider,users,username) values(sysdate,:provider,:customer,:userName)"
+                        + " returning request into :request";
+                    cmd.Parameters.Add("provider", NpgsqlDbType.Integer).Value = provider;
+                    cmd.Parameters.Add("customer", NpgsqlDbType.Integer).Value = customer;
+                    cmd.Parameters.Add("userName", NpgsqlDbType.Varchar).Value = userName;
+                    NpgsqlParameter _request = new NpgsqlParameter("request",NpgsqlDbType.Integer, 0);
+                    _request.Direction = System.Data.ParameterDirection.ReturnValue;
+                    cmd.Parameters.Add(_request);
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() > 0)
+                            return (int)_request.Value;
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка SaveRequest: " + ex.ToString());
+                    }
+                    finally
+                    {
+                        cmd.Dispose();
+                    }
+                }
+            }
+            return 0;
+        }
+        public bool SaveAttachDoc(int request, int ordernmb, string docName, byte[] buffer, int len)
+        {
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using(NpgsqlCommand cmd = conn.CreateCommand()) 
+                {
+                    cmd.CommandText = "insert into resreq.requestdoc(request,ordernmb,docname,document)"
+                        + " values(:request,:ordernmb,:docname,:document)";
+                    cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
+                    cmd.Parameters.Add("ordernmb", NpgsqlDbType.Integer).Value = ordernmb;
+                    cmd.Parameters.Add("docname", NpgsqlDbType.Varchar).Value = docName;
+                    cmd.Parameters.Add("document", NpgsqlDbType.Bytea).Value = buffer;
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() > 0)
+                            return true;
+                    }
+                    catch(NpgsqlException ex) {
+                        throw new MyException(ex.ErrorCode, "Ошибка SaveAttachDoc: " + ex.ToString());
+                    }
+                    finally
+                    {
+                        cmd.Dispose();
+                    }
+                }
+            }
+            return false;
+        }
+        public string GetFactoryEMail(int request)
+        {
+            string email = string.Empty;
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using(NpgsqlCommand cmd = conn.CreateCommand()) 
+                {
+                    cmd.CommandText = "select email from resreq.factory f, resreq.provider p ,resreq.request r "
+                        + " where f.factory = p.factory and p.provider = r.provider and r.request = :request";
+                    cmd.Parameters.Add("provider", NpgsqlDbType.Varchar).Value = request;
+                    try
+                    {
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+                        if (reader.Read()) email = reader.GetString(0);
+                        reader.Close();
+                    }
+                    catch(NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка GetFactoryEMail: " + ex.ToString());
+                    }
+                    finally
+                    {
+                        cmd.Dispose();
+                    }
+                }
+            }
+            return email;
+        }
+        public string GetMailBody(int request)
+        {
+            string CustomerName=string.Empty;
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            {
+                using(NpgsqlCommand cmd = conn.CreateCommand()) 
+                {
+                    cmd.CommandText = "select trim(substr(u.login,1,30)) from resreq.request r,resreq.users u where r.USERS=u.USERS and r.request=:request";
+                    cmd.Parameters.Add("request", NpgsqlDbType.Varchar).Value = request;
+                    try { 
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+                        if (reader.Read())  CustomerName = reader.GetString(0);
+                        reader.Close();
+                    }
+                    catch(NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка GetCustomerName: " + ex.ToString());
+                    }
+                }
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<!DOCTYPE HTML><html><header></header><body><p><i>Поступила электронная заявка №");
+            sb.Append(request.ToString());
+            sb.Append(" от ");
+            sb.Append(DateTime.Now.ToShortDateString() + ".</i></p><p>Заказчик: ");
+            sb.Append(CustomerName);
+            sb.Append(".</p><hr/>");
+            sb.Append("<p style=\"color: lightgray\">УВЕДОМЛЕНИЕ: Это электронное сообщение сформировано автоматически и не требует ответа.</p></body></html>");
+            return sb.ToString();
+        }
+        public void SendMail(string from, string to, string subject, string body)
+        {
+            //string host = WebConfigurationManager.AppSettings["smtpHost"];
+            //string sport = WebConfigurationManager.AppSettings["smtpPort"];
+            //int port = 25;
+            //int.TryParse(sport, out port);
+            //string user = WebConfigurationManager.AppSettings["smtpUser"];
+            //string password = WebConfigurationManager.AppSettings["smtpPassword"];
+            //DB.SendMail(from, to, subject, body, host, port, user, password);
+        }
+    }
+}

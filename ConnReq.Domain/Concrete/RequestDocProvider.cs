@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,10 +25,9 @@ namespace ConnReq.Domain.Concrete
             cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
             cmd.Parameters.Add("rkind", NpgsqlDbType.Integer).Value = resourceKind;
             cmd.Parameters.Add("ctype", NpgsqlDbType.Integer).Value = typeOfCustomer;
-            NpgsqlDataReader reader = null;
             try
             {
-                reader = cmd.ExecuteReader();
+                NpgsqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     RequestDoc doc = new RequestDoc() { Request = request };
@@ -39,6 +39,7 @@ namespace ConnReq.Domain.Concrete
                         doc.FileName = reader.GetString(2);
                     list.Add(doc);
                 }
+                reader.Close();
             }
             catch (NpgsqlException ex)
             {
@@ -46,42 +47,78 @@ namespace ConnReq.Domain.Concrete
             }
             finally
             {
-                if (reader != null)
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
                 cmd.Dispose();
             }
             return list;
         }
         public void UpdateDocument(int request, int ordernmb, string fileName, byte[] buffer, int len)
         {
+            using(NpgsqlConnection conn = PgDb.GetOpenConnection()) 
+            { 
+               using(NpgsqlCommand cmd = conn.CreateCommand()) 
+               {
+                    cmd.CommandText = "update resreq.requestdoc set document=:doc,docname=:fileName where request=:request and ordernmb=:ordernmb";
+                    
+                    cmd.Parameters.Add(":doc",NpgsqlDbType.Bytea).Value = buffer; 
+                    cmd.Parameters.Add("fileName", NpgsqlDbType.Varchar).Value = fileName;
+                    cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
+                    cmd.Parameters.Add("ordernmb", NpgsqlDbType.Integer).Value = ordernmb;
+                    try
+                    {
+                        //if (cmd.ExecuteNonQuery() == 0)
+ //                           if (SaveAttachDoc(request, ordernmb, fileName, buffer, len))
+   //                             UpdateRequest(request);
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка UpdateDocument: " + ex.ToString());
+                    }
+                            finally
+                    {
+ //                       blob.Close();
+                        cmd.Dispose();
+                    }
+               }
+            }
             //using NpgsqlConnection conn = PgDb.GetOpenConnection();
             //using NpgsqlCommand cmd = conn.CreateCommand();
             //cmd.CommandText = "update resreq.requestdoc set document=:doc,docname=:fileName where request=:request and ordernmb=:ordernmb";
             //OracleBlob blob = new OracleBlob(connection);
             //blob.Write(buffer, 0, len);
             //cmd.Parameters.Add("doc", blob);
-            //cmd.Parameters.Add("fileName", NpgsqlDbType.Varchar).Value = fileName;
-            //cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
-            //cmd.Parameters.Add("ordernmb", NpgsqlDbType.Integer).Value = ordernmb;
-            //try
-            //{
-            //    if (cmd.ExecuteNonQuery() == 0)
-            //        if (SaveAttachDoc(request, ordernmb, fileName, buffer, len))
-            //            UpdateRequest(request);
-            //}
-            //catch (NpgsqlException ex)
-            //{
-            //    throw new MyException(ex.ErrorCode, "Ошибка UpdateDocument: " + ex.ToString());
-            //}
-            //finally
-            //{
-            //    blob.Close();
-            //    cmd.Dispose();
-            //}
+
+            
         }
+        /*
+                public bool SaveAttachDoc(int request, int ordernmb, string docName, byte[] buffer, int len)
+        {
+            CheckConnection();
+            OracleCommand cmd = connection.CreateCommand();
+            cmd.CommandText = "insert into resreq.requestdoc(request,ordernmb,docname,document)"
+                + " values(:request,:ordernmb,:docname,:document)";
+            cmd.Parameters.Add("request", request);
+            cmd.Parameters.Add("ordernmb", ordernmb);
+            cmd.Parameters.Add("docname", docName);
+            OracleBlob blob = new OracleBlob(connection);
+            blob.Write(buffer, 0, len);
+            cmd.Parameters.Add("document", blob);
+            try
+            {
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
+            }
+            catch(OracleException ex) {
+                throw new MyException(ex.Number, "Ошибка SaveAttachDoc: " + ex.ToString());
+            }
+            finally
+            {
+                blob.Close();
+                cmd.Dispose();
+            }
+            return false;
+        }
+ 
+         */
         public int GetResourceKind(int request)
         {
             int kind = 0;
