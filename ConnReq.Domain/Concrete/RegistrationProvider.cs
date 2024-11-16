@@ -9,8 +9,6 @@ namespace ConnReq.Domain.Concrete
     {
         public bool Registr(UserSettings settings)
         {
-            
-
             using NpgsqlConnection conn = PgDb.GetOpenConnection();
             using NpgsqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"set search_path to resreq;INSERT INTO resreq.users(login,name,inn,email,password,typeofcustomer,typeofuser,factory) VALUES(@login,@name,@inn,@email,@password,@tc,3,null)";
