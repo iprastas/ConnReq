@@ -82,43 +82,39 @@ namespace ConnReq.Domain.Concrete
                     cmd.CommandText = "select ordernmb,docname,document from resreq.requestdoc where request=:request";
                     cmd.Parameters.Add(":request", NpgsqlDbType.Integer).Value = request;
                     var os = new MemoryStream();
-                        try
+                    try
+                    {
+                        int maxlen =1024*1024*10;
+                        byte[]? bytes = new byte[maxlen];
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+                        long bytesRead=0;
+                        using (var archive = new ZipArchive(os, ZipArchiveMode.Create, true))
                         {
-                            int maxlen =1024*1024*10;
-                            byte[]? bytes = new byte[maxlen];
-                            NpgsqlDataReader reader = cmd.ExecuteReader();
-                            long bytesRead=0;
-                            using (var archive = new ZipArchive(os, ZipArchiveMode.Create, true)){
-                                while (reader.Read())
+                            while (reader.Read())
+                            {
+                                if (!reader.IsDBNull(0))    nmb = (int)reader.GetDecimal(0);
+                                if (!reader.IsDBNull(1))    name = reader.GetString(1);
+                                if (!reader.IsDBNull(2))    bytesRead = reader.GetBytes(2,0,bytes,0,maxlen);
+                                string fname = string.Format("{0}_{1}_{2}", request, nmb, name);
+                                var entry = archive.CreateEntry(fname,CompressionLevel.Optimal);
+                                using (Stream writer = entry.Open())
                                 {
-                                    if (!reader.IsDBNull(0))
-                                        nmb = (int)reader.GetDecimal(0);
-                                    if (!reader.IsDBNull(1))
-                                        name = reader.GetString(1);
-                                    if (!reader.IsDBNull(2))
-                                        bytesRead = reader.GetBytes(2,0,bytes,0,maxlen);
-                                    string fname = string.Format("{0}_{1}_{2}", request, nmb, name);
-                                    var entry = archive.CreateEntry(fname);
-                                    using (Stream writer = entry.Open())
-                                    {
-                                        writer.Write(bytes,0,(int)bytesRead);
-                                   
-                                    }
+                                    writer.Write(bytes,0,(int)bytesRead);
+                                    writer.Flush();
                                 }
-                                os.Position = 0;
-                                bytes = os.ToArray();
-                                //os.Dispose();
-                                return bytes;
                             }
+                            archive.Dispose();
+                            os.Position = 0;
+                            os.Flush();
                         }
-                         catch (NpgsqlException ex)
-                        {
-                            throw new MyException(ex.ErrorCode, "Ошибка GetDocumentsStream: " + ex.ToString());
-                        }
-                        finally
-                        {
-                            cmd.Dispose();
-                        }
+                        bytes = os.ToArray();
+                        return bytes;
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        throw new MyException(ex.ErrorCode, "Ошибка GetDocumentsStream: " + ex.ToString());
+                    }
+                    finally { cmd.Dispose(); }
                 }
             }
         }
