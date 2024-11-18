@@ -69,6 +69,7 @@ namespace ConnReq.Domain.Entities
             sb.Append("&inn=" + Inn);
             sb.Append("&factory=" + Factory.ToString());
             sb.Append("&typeofuser=" + ((int)TypeOfUser).ToString());
+            sb.Append("&user="+ User.ToString());
             response.Cookies.Append(cookieName, sb.ToString(), new CookieOptions() { Expires = new DateTimeOffset(DateTime.Now.AddDays(365)) });
         }
         public bool Restore(HttpRequest request)
@@ -108,6 +109,9 @@ namespace ConnReq.Domain.Entities
 							case "typeofuser":
                                 if (!int.TryParse(strings[1], out int ut)) TypeOfUser = UserType.Empty;
                                 else TypeOfUser = (UserType)ut;
+                                break;
+                            case "user":
+                                User = int.Parse(strings[1]);
                                 break;
                         }
                     }

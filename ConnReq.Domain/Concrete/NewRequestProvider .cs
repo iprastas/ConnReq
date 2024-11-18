@@ -60,10 +60,8 @@ namespace ConnReq.Domain.Concrete
             {
                 using(NpgsqlCommand cmd = conn.CreateCommand()) 
                 { 
-                    StringBuilder sb = new StringBuilder("select p.provider,f.name||' ('||k.name||')'");
-                    sb.Append(" from resreq.provider p,resreq.factory f, resreq.resourceKind k");
-                    sb.Append(" where p.factory = f.factory and p.resourcekind = k.resourcekind"
-                    + " and trunc(sysdate) between trunc(nvl(f.since,sysdate)) and trunc(nvl(f.upto,sysdate))");
+                    StringBuilder sb = new StringBuilder("select p.provider,f.name||' ('||k.name||')' from resreq.provider p,resreq.factory f, resreq.resourceKind k ");
+                    sb.Append(" where p.factory = f.factory and p.resourcekind = k.resourcekind and current_date between coalesce(f.since,current_date) and coalesce(f.upto,current_date)");
                     if (resourceKind > 0) { 
                         sb.Append(" and p.resourcekind = :resourcekind");
                         cmd.Parameters.Add("resourcekind", NpgsqlDbType.Integer).Value =  resourceKind;
@@ -181,18 +179,16 @@ namespace ConnReq.Domain.Concrete
             {
                 using(NpgsqlCommand cmd = conn.CreateCommand()) 
                 {
-                    cmd.CommandText = "insert into resreq.request(outgoingdate,provider,users,username) values(sysdate,:provider,:customer,:userName)"
-                        + " returning request into :request";
+                    cmd.CommandText = "set search_path to resreq;insert into resreq.request(outgoingdate,provider,users,username) values(current_date,:provider,:customer,:userName)"
+                        + " returning request";
                     cmd.Parameters.Add("provider", NpgsqlDbType.Integer).Value = provider;
                     cmd.Parameters.Add("customer", NpgsqlDbType.Integer).Value = customer;
                     cmd.Parameters.Add("userName", NpgsqlDbType.Varchar).Value = userName;
-                    NpgsqlParameter _request = new NpgsqlParameter("request",NpgsqlDbType.Integer, 0);
-                    _request.Direction = System.Data.ParameterDirection.ReturnValue;
-                    cmd.Parameters.Add(_request);
                     try
                     {
-                        if (cmd.ExecuteNonQuery() > 0)
-                            return (int)_request.Value;
+                        var ret = cmd.ExecuteScalar();
+                        if(ret != null) return (int)ret;
+                        else return 0;
                     }
                     catch (NpgsqlException ex)
                     {

@@ -16,32 +16,36 @@ namespace ConnReq.WebUI.Controllers
         }
         public ActionResult Index(int request)
         {
-            //if (HttpContext.Session["ControlState"] == null)
-            //    HttpContext.Session["ControlState"] = new ControlsState() { Request = request };
-            //ControlsState state = (ControlsState)HttpContext.Session["ControlState"];
-            //state.Request = request;
-            //state.ResourceKind = provider.GetResourceKind(request);
-            //UserSettings settings = (UserSettings)HttpContext.Session["UserSettings"];
-            //ViewBag.User = settings.UserName;
+            ControlsState state = new ControlsState();
+            state.Restore(Request);
+            state.Request = request;
+            state.ResourceKind = provider.GetResourceKind(request);
+            state.Save(Response);
+            UserSettings settings = new UserSettings();
+            settings.Restore(Request);
+            ViewBag.User = settings.UserName;
             RequestDocList model = new RequestDocList();
-            //model.DocList = provider.GetRequestDocs(state.Request, state.ResourceKind, (int)settings.Typeofcustomer);
-            //ViewBag.Message = provider.GetRequestName(request);
+            model.DocList = provider.GetRequestDocs(state.Request, state.ResourceKind, (int)settings.Typeofcustomer);
+            ViewBag.Message = provider.GetRequestName(request);
             return View(model);
         }
-        //public ActionResult SaveDocument(int ordernmb, HttpPostedFileBase fileUpload)
-        //{
-        //    ControlsState state = (ControlsState)HttpContext.Session["ControlState"];
-        //    int request = state.Request;
-        //    byte[] bytes = new byte[fileUpload.ContentLength];
-        //    fileUpload.InputStream.Read(bytes, 0, fileUpload.ContentLength);
-        //    provider.UpdateDocument(request, ordernmb, fileUpload.FileName, bytes, fileUpload.ContentLength);
-        //    //return View();
-        //    return RedirectToRoute(new
-        //    {
-        //        controller = "RequestDoc",
-        //        action = "Index",
-        //        request = state.Request
-        //    }); ;
-        //}
+        public ActionResult SaveDocument(int ordernmb, IFormFile fileUpload)
+        {
+            ControlsState state = new();
+            state.Restore(Request);
+            int request = state.Request;
+            byte[] bytes = new byte[fileUpload.Length];
+            using(MemoryStream ms = new MemoryStream()) { 
+                fileUpload.CopyTo(ms);
+                ms.Read(bytes, 0, bytes.Length);
+            }
+            provider.UpdateDocument(request, ordernmb, fileUpload.FileName, bytes, (int)fileUpload.Length);
+            return RedirectToRoute(new
+            {
+                controller = "RequestDoc",
+                action = "Index",
+                request = state.Request
+            }); ;
+        }
     }
 }
