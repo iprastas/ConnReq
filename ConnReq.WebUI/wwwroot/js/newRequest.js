@@ -7,16 +7,16 @@ $(function () {
 
     var docTable = $('#docsTable').docsTable({ url: siteRoot + '/NewRequest/GetDocuments' });
 
-    $('#resourceKind').bind('change', function (event) {
+    $('#resourceKind').on('change', function (event) {
         postData('resourceKind', $(event.target).val());
     });
-    $('#territory').bind('change', function (event) {
+    $('#territory').on('change', function (event) {
         postData('territory', $(event.target).val());
     });
-    $('#providers').bind('change', function (event) {
+    $('#providers').on('change', function (event) {
         postData('providers', $(event.target).val());
     });
-    $('#CreateRequest').bind('click', function (event) {
+    $('#CreateRequest').on('click', function (event) {
         $('docTable').docsTable('makeBody');
         $('#CreateRequest').hide('slow');
         $("#providers").hide('slow');
