@@ -12,15 +12,15 @@
 <h3>@ViewBag.Title</h3>
 <var id="siteRoot" hidden="hidden">@Url.Content("~")</var>
 
-<div class="row">
-    <div class="col-md-3">
+<div class="row form-group">
+    <div class="col-md-2">
         <div id="since" class="control" title="начало периода">
-            <input type="text" id="sincedp" value="01.01.@DateTime.Now.Year.ToString()" />
+            <input type="date" class="form-control" id="sincedp" value="@DateTime.Now.Year.ToString()-01-01" />
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div id="upto" class="control" title="окончание периода">
-            <input type="text" id="uptodp" value="31.12.@DateTime.Now.Year.ToString()" />
+            <input type="date" class="form-control" id="uptodp" value="@DateTime.Now.Year.ToString()-12-31" />
         </div>
     </div>
     <div class="col-md-3">
@@ -30,11 +30,9 @@
         <div id="territory" class="control" title="Территории"></div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-2">
-        <input type="checkbox" class="checkbox" id="showEmpty" />
-    </div>
-    <div class="col-md-2">Скрыть пустые строки</div>
+<div class="form-group">
+    <input type="checkbox" class="form-check-input" id="showEmpty" />
+    <label class="form-check-label" for="showEmpty">Скрыть пустые строки</label>
 </div>
 <div class="row">
     <div id="grid" class="col-md-12"></div>
