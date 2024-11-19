@@ -78,7 +78,7 @@ namespace ConnReq.Domain.Concrete
         {
             using NpgsqlConnection conn = PgDb.GetOpenConnection();
             using NpgsqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "resreq.removerequest";
+            cmd.CommandText = "call resreq.removerequest(:request)";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
             try
