@@ -16,7 +16,7 @@
         readOnly: true
     });
     grid.on('formReady.sgrid', function () {
-        $('table.scroll').tableHeadFixer({ 'left': 2 });
+        $('#sgrid').tableHeadFixer({ 'left': 2 });
     });
     $("#sincedp").on('change', function (event) {
         since = $(event.target).val();

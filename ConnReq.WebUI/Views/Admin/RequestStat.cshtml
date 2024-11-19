@@ -23,17 +23,21 @@
             <input type="date" class="form-control" id="uptodp" value="@DateTime.Now.Year.ToString()-12-31" />
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div id="resourceKind" class="control" title="Виды ресурсов"></div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div id="territory" class="control" title="Территории"></div>
     </div>
+    <div class="col-md-2">
+        <input type="checkbox" class="form-check-input" id="showEmpty" />
+        <label class="form-check-label" for="showEmpty">Скрыть пустые строки</label>
+    </div>
 </div>
-<div class="form-group">
+@* <div class="form-group">
     <input type="checkbox" class="form-check-input" id="showEmpty" />
     <label class="form-check-label" for="showEmpty">Скрыть пустые строки</label>
-</div>
+</div> *@
 <div class="row">
     <div id="grid" class="col-md-12"></div>
 </div>

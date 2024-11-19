@@ -32,8 +32,18 @@ body {
     max-height: 80vh;
 }
 .sgrid_container {
-    height: 75vh;
+    height: 72vh;
     width: 100%;
+}
+.sgrid_caption {
+    font: bold 16pt arial, verdana;
+    text-align: center;
+    background: lightblue;
+    border-top: 1px solid #6D6D6D;
+    border-left: 1px solid #6D6D6D;
+    border-right: 1px solid #6D6D6D;
+    border-bottom: 1px solid #6D6D6D;
+    border-radius: 3px;
 }
 table {
     border-width: 0;
