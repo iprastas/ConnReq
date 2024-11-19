@@ -73,7 +73,7 @@
     function makeList(inst,dt) {
         var sett = $(inst).data("slistbox");
         if (sett === null || sett === undefined) return;
-        var sel = $('<select>', $(inst)).appendTo(inst);
+        var sel = $('<select>', $(inst)).appendTo(inst).addClass("form-select");
         if (dt.length === 0) {
             $(inst).hide();
             return;
