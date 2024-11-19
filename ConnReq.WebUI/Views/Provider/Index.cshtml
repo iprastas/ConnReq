@@ -53,14 +53,14 @@
                         }
                         <td>@p.Remarks</td>
                         <td>
-                            <a href='@Url.Action("Index", "Response", new { request = p.Request })' title="Ответить" class="btn btn-primary">
+                            <a href='@Url.Action("Index", "Response", new { request = p.Request })' title="Ответить" class="btn btn-outline-success">
                                 <span class="glyphicon glyphicon-envelope" aria-hidden="true">
                                     <img src="~/envelope-fill.svg">
                                 </span>
                             </a>
                             @if (p.CanDeleted)
                             {
-                                <a href='@Url.Action("Remove", "Provider", new { request = p.Request })' title="Аннулировать заявку" class="btn btn-primary">
+                                <a href='@Url.Action("Remove", "Provider", new { request = p.Request })' title="Аннулировать заявку" class="btn btn-outline-danger">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true">
                                         <img src="~/x.svg">
                                     </span>
@@ -70,7 +70,7 @@
                         <td>
                             @if (p.DocCount > 0)
                             {
-                                <a href='@Url.Action("DownloadFiles", new { request = p.Request })' title="Загрузить архив документов" class="btn btn-primary">
+                                <a href='@Url.Action("DownloadFiles", new { request = p.Request })' title="Загрузить архив документов" class="btn btn-outline-primary">
                                     <span class="glyphicon glyphicon-download" aria-hidden="true">
                                         <img src="~/arrow-down-circle.svg">
                                     </span>
