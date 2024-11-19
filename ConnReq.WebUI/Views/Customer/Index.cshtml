@@ -56,7 +56,7 @@
                                 </a>
                             </td>
                             <td>
-                                <a href='#' id=@p.Request title="Удалить заявку" class="btn btn-outline-danger del-button">
+                                <a href='@Url.Action("RemoveRequest", "Customer", new { request = p.Request })' id=@p.Request title="Удалить заявку" class="btn btn-outline-danger del-button">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true">
                                         <img src="~/x.svg">
                                     </span>
@@ -76,10 +76,4 @@
     <div class="col-md-4 col-md-offset-4">
         <input type="button" class="btn btn-outline-success" title="Загрузить шаблоны заявок" value="Загрузить шаблоны заявок" onclick="location.href='@Url.Action("Download", "Customer")'" />
     </div>
-</div>
-<div id="deleteDlg" title="Подверждаете удаление?">
-    <p>
-        <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
-        Вы действительно хотите безвозвратно удалить заявку?
-    </p>
 </div>
