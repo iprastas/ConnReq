@@ -10,7 +10,6 @@
                 url: null,
                 selector: null
             }, options);
-            settings.selector = this.selector;
             this.data("docsTable", settings);
             makeTable(this);
         },

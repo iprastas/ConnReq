@@ -16,6 +16,7 @@ namespace ConnReq.WebUI.Controllers
         {
             UserSettings settings = new UserSettings();
             settings.Restore(Request);
+            ViewBag.User = settings.UserName;
             if (settings.TypeOfUser!= UserType.Provider)
             {
                 return RedirectToRoute(new

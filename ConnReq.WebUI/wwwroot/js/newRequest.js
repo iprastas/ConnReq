@@ -5,7 +5,7 @@ $(function () {
     var territory = $("#territory").slistbox({url: siteRoot + '/NewRequest/GetTerritory' });
     var providers = $("#providers").slistbox({ url: siteRoot + '/NewRequest/GetProviders' });
 
-    var docTable = $('#docsTable').docsTable({ url: siteRoot + '/NewRequest/GetDocuments' });
+    var docTable = $('#docsTable').docsTable({ url: siteRoot + '/NewRequest/GetDocuments', selector: "#docsTable"});
 
     $('#resourceKind').on('change', function (event) {
         postData('resourceKind', $(event.target).val());
