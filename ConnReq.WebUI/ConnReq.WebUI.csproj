@@ -18,4 +18,9 @@
     <Folder Include="wwwroot\js\controls\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Documents\Request_docs.pdf" />
+    <None Include="wwwroot\Documents\ЗАЯВКА_ЮЛ_ИП_ФЛ.doc" />
+  </ItemGroup>
+
 </Project>

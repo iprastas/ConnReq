@@ -2,6 +2,7 @@
 using ConnReq.Domain.Entities;
 using ConnReq.WebUI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
 
@@ -11,11 +12,12 @@ namespace ConnReq.WebUI.Controllers
     public class CustomerController : Controller
     {
         // GET: Customer
-        ICustomerProvider provider = null;
-
-        public CustomerController(ICustomerProvider p)
+        ICustomerProvider provider;
+        IWebHostEnvironment webHostEnvironment;
+        public CustomerController(ICustomerProvider p, IWebHostEnvironment webHostEnvironment)
         {
             provider = p;
+            this.webHostEnvironment = webHostEnvironment;
         }
         public ActionResult Index(int customer)
         {
@@ -43,7 +45,8 @@ namespace ConnReq.WebUI.Controllers
         }
         public FileResult Download()
         {
-            byte[] buffer = System.IO.File.ReadAllBytes(HostingEnvironment.MapPath(@"~/Documents/ЗАЯВКА_ЮЛ_ИП_ФЛ.doc"));
+            string webRootPath = webHostEnvironment.WebRootPath;
+            byte[] buffer = System.IO.File.ReadAllBytes(Path.Combine(webRootPath,"Documents/ЗАЯВКА_ЮЛ_ИП_ФЛ.doc"));
             return File(buffer, "application/octet-stream", "Заявки.doc");
         }
     }
