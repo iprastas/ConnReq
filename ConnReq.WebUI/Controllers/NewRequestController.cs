@@ -76,25 +76,25 @@ namespace ConnReq.WebUI.Controllers
             state.Save(Response);
             return Json(ret);
         }
-        //public ActionResult CreateRequest()
-        //{
-        //    UserSettings settings = new UserSettings();settings.Restore(Request);
-        //    ControlsState state = new ControlsState();state.Restore(Request);
-        //    int request = provider.SaveRequest(settings.User, state.Provider,settings.UserName);
-        //    state.Request = request;
-        //    if (request > 0)
-        //    {
-        //        return RedirectToRoute(new
-        //        {
-        //            controller = "AttachDocs",
-        //            action = "CreateRequest",
-        //         });
-        //    }
-        //    else
-        //    {
-        //        return View();
-        //    }
-        //}
+        public ActionResult CreateRequest()
+        {
+            UserSettings settings = new UserSettings();settings.Restore(Request);
+            ControlsState state = new ControlsState();state.Restore(Request);
+            int request = provider.SaveRequest(settings.User, state.Provider,settings.UserName);
+            state.Request = request;
+            if (request > 0)
+            {
+                return RedirectToRoute(new
+                {
+                    controller = "AttachDocs",
+                    action = "CreateRequest",
+                 });
+            }
+            else
+            {
+                return View();
+            }
+        }
         [HttpGet]
         public JsonResult GetDocuments()
         {
@@ -144,8 +144,9 @@ namespace ConnReq.WebUI.Controllers
                         , provider.GetFactoryEMail(state.Request)
                         , "Заявка №" + state.Request
                         , provider.GetMailBody(state.Request)
-                        , host,port,user,password);
-                }catch(SmtpException ex){ throw new MyException(-1, ex.Message);}
+                        , host, port, user, password);
+                }
+                catch (SmtpException ex) { throw new MyException(-1, ex.Message); }
             }
             return RedirectToRoute(new
             {

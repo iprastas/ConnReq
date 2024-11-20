@@ -32,7 +32,7 @@
         @using (Html.BeginForm("SaveDocument", "NewRequest", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div id="docsTable" class="control" style="overflow:auto;height:500px;" title="Прилагаемые документы(размером не более 10МБ)"></div>
-            <input type="submit" name="UploadMultiply" id="SubmitMultiply" value="Отправить документы" hidden="hidden" />
+            <input type="submit" class="btn btn-primary" name="UploadMultiply" id="SubmitMultiply" value="Отправить документы" hidden="hidden" />
         }
     </div>
 </div>
