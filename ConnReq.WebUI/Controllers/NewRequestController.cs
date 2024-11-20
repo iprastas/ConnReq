@@ -15,7 +15,8 @@ namespace ConnReq.WebUI.Controllers
     public class NewRequestController : Controller
     {
         INewRequestProvider provider;
-        public NewRequestController(INewRequestProvider p) { provider = p; }
+        IConfiguration configuration;
+        public NewRequestController(INewRequestProvider p, IConfiguration c) { provider = p; configuration = c;}
         public IActionResult Index()
         {
             NewRequest model = new NewRequest();
@@ -124,12 +125,26 @@ namespace ConnReq.WebUI.Controllers
              }
             if (canSendEMail)
             {
+                string? host="", sport = "25", user="", password = "";
+                var section = configuration.GetSection("Mail");
+                foreach (var el in section.GetChildren())
+                {
+                    switch (el.Key)
+                    {
+                        case "smtpHost": host = el.Value; break;
+                        case "smtpPort": sport = el.Value; break;
+                        case "smtpUser": user = el.Value; break;
+                        case "smtpPassword": password = el.Value; break;
+                    }
+                }
+                _ = int.TryParse(sport, out int port);
                 try
                 {
                     provider.SendMail(settings.EMail
                         , provider.GetFactoryEMail(state.Request)
                         , "Заявка №" + state.Request
-                        , provider.GetMailBody(state.Request));
+                        , provider.GetMailBody(state.Request)
+                        , host,port,user,password);
                 }catch(SmtpException ex){ throw new MyException(-1, ex.Message);}
             }
             return RedirectToRoute(new

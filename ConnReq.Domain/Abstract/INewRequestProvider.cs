@@ -1,4 +1,5 @@
 ﻿using ConnReq.Domain.Entities;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,6 @@ namespace ConnReq.Domain.Abstract
         bool SaveAttachDoc(int request, int ordernmb, string docName, byte[] buffer, int len);
         string GetFactoryEMail(int request);
         string GetMailBody(int request);
-        void SendMail(string from, string to, string subject, string body);
+        void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd);
     }
 }

@@ -90,7 +90,7 @@
                 }
             });
             if (count === rowCount)
-                $('#SubmitMultiply').show('slow');
+                $('#SubmitMultiply').removeAttr('hidden');//show('slow');
         });
     }
 })(jQuery);

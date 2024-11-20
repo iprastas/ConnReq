@@ -1,5 +1,8 @@
 ﻿using ConnReq.Domain.Abstract;
 using ConnReq.Domain.Entities;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using Npgsql;
 using NpgsqlTypes;
 using System.Text;
@@ -218,7 +221,7 @@ namespace ConnReq.Domain.Concrete
                 using NpgsqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "select email from resreq.factory f, resreq.provider p ,resreq.request r "
                     + " where f.factory = p.factory and p.provider = r.provider and r.request = :request";
-                cmd.Parameters.Add("provider", NpgsqlDbType.Varchar).Value = request;
+                cmd.Parameters.Add("provider", NpgsqlDbType.Integer).Value = request;
                 try
                 {
                     NpgsqlDataReader reader = cmd.ExecuteReader();
@@ -265,15 +268,25 @@ namespace ConnReq.Domain.Concrete
             sb.Append("<p style=\"color: lightgray\">УВЕДОМЛЕНИЕ: Это электронное сообщение сформировано автоматически и не требует ответа.</p></body></html>");
             return sb.ToString();
         }
-        public void SendMail(string from, string to, string subject, string body)
+        public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
-            //string host = WebConfigurationManager.AppSettings["smtpHost"];
-            //string sport = WebConfigurationManager.AppSettings["smtpPort"];
+            //string? host, sport="25", user, password;
+            //var section = configuration.GetSection("Mail");
+            //foreach (var el in section.GetChildren())
+            //{
+            //    switch(el.Key)
+            //    {
+            //        case "smtpHost": host = el.Value; break; 
+            //        case "smtpPort": sport = el.Value; break;
+            //        case "smtpUser": user = el.Value; break;
+            //        case "smtpPassword": password = el.Value; break;
+            //    }
+            //}
             //int port = 25;
-            //int.TryParse(sport, out port);
-            //string user = WebConfigurationManager.AppSettings["smtpUser"];
-            //string password = WebConfigurationManager.AppSettings["smtpPassword"];
+            //_ = int.TryParse(sport, out port);
+            
             //DB.SendMail(from, to, subject, body, host, port, user, password);
+
         }
     }
 }
