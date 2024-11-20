@@ -41,10 +41,10 @@ namespace ConnReq.WebUI.Controllers
             settings.Restore(Request);
             return RedirectToAction("Index", new { customer = settings.User });
         }
-        //public FileResult Download()
-        //{
-        //    byte[] buffer = System.IO.File.ReadAllBytes(HostingEnvironment.MapPath(@"~/Documents/ЗАЯВКА_ЮЛ_ИП_ФЛ.doc"));
-        //    return File(buffer, "application/octet-stream", "Заявки.doc");
-        //}
+        public FileResult Download()
+        {
+            byte[] buffer = System.IO.File.ReadAllBytes(HostingEnvironment.MapPath(@"~/Documents/ЗАЯВКА_ЮЛ_ИП_ФЛ.doc"));
+            return File(buffer, "application/octet-stream", "Заявки.doc");
+        }
     }
 }
