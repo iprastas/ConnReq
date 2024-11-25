@@ -16,7 +16,7 @@ namespace ConnReq.WebUI.Controllers
         }
         public ActionResult Edit(int? factory)
         {
-            UserSettings settings = new();//((UserSettings)HttpContext.Session["UserSettings"]);
+            UserSettings settings = new();
             settings.Restore(Request);
             ViewBag.User = settings.UserName;
             Provider model = new Provider();

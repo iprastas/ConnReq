@@ -15,16 +15,16 @@
         dateDelimiter: '.',
         readOnly: true
     });
-    grid.on('formReady.sgrid', function () {
+    $('formReady.sgrid', function () {
         $('#sgrid').tableHeadFixer({ 'left': 2 });
     });
-    $("#sincedp").on('change', function (event) {
+    $("#sincedp").on('focusout', function (event) {
         since = $(event.target).val();
         postData();
     });
     $("#uptodp").on('change', function (event) {
         upto = $(event.target).val();
-        postData()
+        postData();
     });
     
     $('#resourceKind').on('change', function (event) {
@@ -36,7 +36,6 @@
         postData();
     });
     function postData() {
-         $('table.scroll').tableHeadFixer({ 'left': 2 });
         grid.sgrid('setParams', '?t=' + terr + '&kind=' + resKind + '&snc=' + since + '&upt=' + upto);
         grid.sgrid('setForm', 0).then(function () {
             if ($('#showEmpty').is(':checked')) {
@@ -47,7 +46,8 @@
                 $('th span.glyphicon', grid).addClass('glyphicon-sort');
             }
         });
-    }
+    };
+
     $('#showEmpty').on('change', function (event) {
         if (this.checked) {
             grid.sgrid('hideEmptyRows', [2, 3, 4, 5, 6]);

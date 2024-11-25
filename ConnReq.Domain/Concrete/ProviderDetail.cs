@@ -85,7 +85,7 @@ namespace ConnReq.Domain.Concrete
                     cmd.Parameters.Add(f);
                     cmd.Parameters.Add(":vname", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Name) ? DBNull.Value : p.Name;
                     cmd.Parameters.Add(":nterritory", NpgsqlDbType.Integer).Value = p.Territory;
-                    cmd.Parameters.Add(":vinn", NpgsqlDbType.Integer).Value = string.IsNullOrEmpty(p.INN) ? DBNull.Value : p.INN;
+                    cmd.Parameters.Add(":vinn", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.INN) ? DBNull.Value : p.INN;
                     cmd.Parameters.Add(":vname", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.EMail) ? DBNull.Value : p.EMail;
                     cmd.Parameters.Add(":vwebsite", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.WebSite) ? DBNull.Value : p.WebSite;
                     cmd.Parameters.Add(":vchief", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Chief) ? DBNull.Value : p.Chief;

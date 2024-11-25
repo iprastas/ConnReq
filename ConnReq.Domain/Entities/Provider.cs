@@ -10,10 +10,8 @@ namespace ConnReq.Domain.Entities
         [Display(Name="Предприятие*")]
 	    public string? Name { get; set; }
         [Display(Name = "Работает в*")]
-        [Required]
-        public SelectList TerritoryWork { get; set; } 
+        public SelectList? TerritoryWork { get; set; }
         public int Territory { get; set; }
-        public string? TerritoryName { get; set; }
         [Required]
         [Display(Name="ИНН*")]
         public string? INN { get; set; }
@@ -42,5 +40,6 @@ namespace ConnReq.Domain.Entities
         public bool Warm { get; set; }
         [Display(Name = "Водоснабжение")]
         public bool Water { get; set; }
+        public string? TerritoryName { get; set; }
     }
 }

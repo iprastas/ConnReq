@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="bundleconfig.json" />
     <Content Remove="Views\Home\Privacy.cshtml" />
   </ItemGroup>
 
@@ -19,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="bundleconfig.json" />
     <None Include="wwwroot\Documents\Request_docs.pdf" />
     <None Include="wwwroot\Documents\ЗАЯВКА_ЮЛ_ИП_ФЛ.doc" />
   </ItemGroup>

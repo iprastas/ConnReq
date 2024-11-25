@@ -23,10 +23,9 @@
             <div class="form-group col-md-4">
                 @Html.LabelFor(m => m.TerritoryWork, new { @class = "control-label" })
                 <dvi class="col">
-                    @Html.DropDownListFor(m => m.Territory, Model.TerritoryWork, "", new { @class = "form-select" })
+                    @Html.DropDownListFor(m => m.Territory, Model.TerritoryWork, null, new { @class = "form-select" })
                 </dvi>
             </div>
-            
         </div>
 
         <div class="row">
@@ -92,7 +91,8 @@
             <div class="form-group col-md-2">
                 @Html.LabelFor(m => m.Since, new { @class = "col control-label" })
                 <div class="col">
-                    @Html.TextBoxFor(m => m.Since, new { @class = "form-control", @type = "date" })
+ @*                    @Html.TextBoxFor(m => m.Since, new { @class = "form-control", @type = "date" }) *@
+                    <input type="date" value="@Model?.Since.ToString("yyyy-MM-dd")" name="Since" class="form-control" />
                     @Html.ValidationMessageFor(m => m.Since, "", new { @class = "text-danger" })
                 </div>
             </div>
