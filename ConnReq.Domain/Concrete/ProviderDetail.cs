@@ -79,29 +79,28 @@ namespace ConnReq.Domain.Concrete
                 using (NpgsqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "call resreq.updatefactoryprovider(:nfactory,:vname,:nterritory,:vinn,:vemail,:vwebsite,:vchief,:vaddress,:dsince,:dupto,:nwarm,:nwater)";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    NpgsqlParameter f = new NpgsqlParameter(":nfactory", NpgsqlDbType.Integer); f.Value = p.FactoryId;
+                    NpgsqlParameter f = new NpgsqlParameter("nfactory", NpgsqlDbType.Integer); f.Value = p.FactoryId;
                     f.Direction = ParameterDirection.InputOutput;
                     cmd.Parameters.Add(f);
-                    cmd.Parameters.Add(":vname", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Name) ? DBNull.Value : p.Name;
-                    cmd.Parameters.Add(":nterritory", NpgsqlDbType.Integer).Value = p.Territory;
-                    cmd.Parameters.Add(":vinn", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.INN) ? DBNull.Value : p.INN;
-                    cmd.Parameters.Add(":vname", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.EMail) ? DBNull.Value : p.EMail;
-                    cmd.Parameters.Add(":vwebsite", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.WebSite) ? DBNull.Value : p.WebSite;
-                    cmd.Parameters.Add(":vchief", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Chief) ? DBNull.Value : p.Chief;
-                    cmd.Parameters.Add(":vaddress",  NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Address) ? DBNull.Value : p.Address;
-                    cmd.Parameters.Add(":dsince", NpgsqlDbType.Date).Value = p.Since;
-                    cmd.Parameters.Add(":dupto", NpgsqlDbType.Date).Value = p.Upto is null ? DBNull.Value : p.Upto;
+                    cmd.Parameters.Add("vname", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Name) ? DBNull.Value : p.Name;
+                    cmd.Parameters.Add("nterritory", NpgsqlDbType.Integer).Value = p.Territory;
+                    cmd.Parameters.Add("vinn", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.INN) ? DBNull.Value : p.INN;
+                    cmd.Parameters.Add("vemail", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.EMail) ? DBNull.Value : p.EMail;
+                    cmd.Parameters.Add("vwebsite", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.WebSite) ? DBNull.Value : p.WebSite;
+                    cmd.Parameters.Add("vchief", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Chief) ? DBNull.Value : p.Chief;
+                    cmd.Parameters.Add("vaddress",  NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(p.Address) ? DBNull.Value : p.Address;
+                    cmd.Parameters.Add("dsince", NpgsqlDbType.Date).Value = p.Since;
+                    cmd.Parameters.Add("dupto", NpgsqlDbType.Date).Value = p.Upto is null ? DBNull.Value : p.Upto;
                     if (p.Warm) warm = 1;   else warm=0;
-                    NpgsqlParameter pwarm = new NpgsqlParameter(":nwarm", NpgsqlDbType.Integer); pwarm.Value = warm;
+                    NpgsqlParameter pwarm = new NpgsqlParameter("nwarm", NpgsqlDbType.Integer); pwarm.Value = warm;
                     cmd.Parameters.Add(pwarm);
                     if (p.Water) water = 1; else water=0;
-                    NpgsqlParameter pwater = new NpgsqlParameter(":nwater",NpgsqlDbType.Integer); pwater.Value = water;
+                    NpgsqlParameter pwater = new NpgsqlParameter("nwater",NpgsqlDbType.Integer); pwater.Value = water;
                     cmd.Parameters.Add(pwater);
                     try
                     {
                         cmd.ExecuteNonQuery();
-                        p.FactoryId = (int)cmd.Parameters[":nfactory"].Value;
+                        p.FactoryId = (int)cmd.Parameters["nfactory"].Value;
                     }
                     catch(NpgsqlException ex)
                     {
