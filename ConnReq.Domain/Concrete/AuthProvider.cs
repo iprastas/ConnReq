@@ -9,16 +9,17 @@ namespace ConnReq.Domain.Concrete
     {
         public UserSettings Authenticate(LoginViewModel login)
         {
-            UserSettings settings = new UserSettings();
+            UserSettings settings = new();
             using(NpgsqlConnection conn = PgDb.GetOpenConnection())
             {
                 NpgsqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "select typeofcustomer,typeofuser,email,factory,users from resreq.users"
                     + " where login=:login and password=:password";
                 cmd.CommandType = System.Data.CommandType.Text;
-                cmd.Parameters.Add("login", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(login.UserName) ? DBNull.Value : login.UserName;
+                string? userName = login.UserName;
+                cmd.Parameters.Add("login", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(userName) ? global::System.DBNull.Value : userName;
                 cmd.Parameters.Add("password", NpgsqlDbType.Varchar).Value = string.IsNullOrEmpty(login.Password) ? DBNull.Value : login.Password;
-                settings.UserName = login.UserName;
+                settings.UserName = userName ?? "";
                 NpgsqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {

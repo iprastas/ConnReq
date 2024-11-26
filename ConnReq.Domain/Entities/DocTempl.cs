@@ -9,7 +9,7 @@ namespace ConnReq.Domain.Entities
     public class DocTempl
     {
         public int OrderNmb { get; set; }
-        public string Text { get; set; }
+        public string? Text { get; set; }
     }
     public class DocTemplList
     {

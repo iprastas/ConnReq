@@ -3,6 +3,10 @@ using ConnReq.Domain.Abstract;
 using ConnReq.Domain.Concrete;
 using ConnReq.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+
 namespace ConnReq.WebUI
 {
     public class Program
@@ -10,8 +14,13 @@ namespace ConnReq.WebUI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDataProtection().UseCryptographicAlgorithms(
+                new AuthenticatedEncryptorConfiguration {
+                    EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+                    ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+                }
+            );
 
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IAuthProvider, AuthProvider>();
             builder.Services.AddScoped<IAdminProvider, AdminProvider>();

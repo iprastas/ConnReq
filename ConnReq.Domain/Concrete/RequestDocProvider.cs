@@ -127,15 +127,14 @@ namespace ConnReq.Domain.Concrete
             using NpgsqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "select p.resourcekind from resreq.provider p,resreq.request r where r.request=:request and r.provider=p.provider";
             cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
-            NpgsqlDataReader reader = null;
             try
             {
-                reader = cmd.ExecuteReader();
+                NpgsqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    if (!reader.IsDBNull(0))
-                        kind = reader.GetInt32(0);
+                    if (!reader.IsDBNull(0))  kind = reader.GetInt32(0);
                 }
+                reader.Close();
             }
             catch (NpgsqlException ex)
             {
@@ -143,11 +142,6 @@ namespace ConnReq.Domain.Concrete
             }
             finally
             {
-                if (reader != null)
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
                 cmd.Dispose();
             }
             return kind;
@@ -159,14 +153,14 @@ namespace ConnReq.Domain.Concrete
             using NpgsqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "select ' №'||request||' от '||to_char(outgoingdate,'DD.MM.YYYY')  from resreq.request r where request=:request";
             cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
-            NpgsqlDataReader reader = null;
             try
             {
-                reader = cmd.ExecuteReader();
+                NpgsqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
                     ret = reader.GetString(0);
                 }
+                reader.Close();
             }
             catch (NpgsqlException ex)
             {
@@ -174,12 +168,7 @@ namespace ConnReq.Domain.Concrete
             }
             finally
             {
-                if (reader != null)
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
-                cmd.Dispose();
+                 cmd.Dispose();
             }
             return ret;
         }

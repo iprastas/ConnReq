@@ -50,9 +50,9 @@ namespace ConnReq.Domain.Concrete
                             if (!reader.IsDBNull(9))
                                 data.Upto = reader.GetDateTime(9);
                             if (!reader.IsDBNull(10))
-                                data.Warm = reader.GetDecimal(10) == 1 ? true : false;
+                                data.Warm = reader.GetDecimal(10) == 1;
                             if (!reader.IsDBNull(11))
-                                data.Water = reader.GetDecimal(11) == 1 ? true : false;
+                                data.Water = reader.GetDecimal(11) == 1;
                             if (!reader.IsDBNull(12))
                             {
                                 data.TerritoryWork = new SelectList(GetTerritory(), "Value", "Text", data.Territory);

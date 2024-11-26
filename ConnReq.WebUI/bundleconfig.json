@@ -8,5 +8,29 @@
       "wwwroot/js/controls/spin.js",
       "wwwroot/js/controls/tableHeadFixer.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/requestStat.min.js",
+    "inputFiles": [
+      "wwwroot/js/requestStat.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/editRequestDoc.min.js",
+    "inputFiles": [
+      "wwwroot/js/editRequestDoc.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/hideShowRow.min.js",
+    "inputFiles": [
+      "wwwroot/js/hideShowRow.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/fixTable.min.js",
+    "inputFiles": [
+      "wwwroot/js/fixTable.js"
+    ]
   }
 ]

@@ -15,7 +15,7 @@ namespace ConnReq.Domain.Concrete
     {
         public List<RequestData> ReadCustomerRequest(int customer)
         {
-            List<RequestData> list = new List<RequestData>();
+            List<RequestData> list = [];
             using NpgsqlConnection conn = PgDb.GetOpenConnection();
             using NpgsqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "select r.request,r.outgoingdate,r.incomingnum,r.incomingdate,r.contractdate,"
@@ -26,10 +26,9 @@ namespace ConnReq.Domain.Concrete
                 + " and r.deleted=0 order by r.request desc";
             cmd.CommandType = CommandType.Text;
             cmd.Parameters.Add("customer", NpgsqlDbType.Integer).Value = customer;
-            NpgsqlDataReader reader = null;
             try
             {
-                reader = cmd.ExecuteReader();
+                NpgsqlDataReader  reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     RequestData request = new RequestData();
@@ -56,7 +55,7 @@ namespace ConnReq.Domain.Concrete
                     if (!reader.IsDBNull(10))
                         request.LastUpdate = reader.GetString(10);
                     list.Add(request);
-                }
+                } reader.Close();
             }
             catch (NpgsqlException ex)
             {
@@ -64,11 +63,6 @@ namespace ConnReq.Domain.Concrete
             }
             finally
             {
-                if (reader != null)
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
                 cmd.Dispose();
             }
 

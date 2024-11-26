@@ -13,12 +13,12 @@ namespace ConnReq.Domain.Entities
         [DataType(DataType.Date)]
         public DateTime OutgoingDate { get; set; }
         public int DocCount { get; set; }
-        public string Organisation { get; set; }
-        public string Address { get; set; }
-        public string ResourceName { get; set; }
+        public string? Organisation { get; set; }
+        public string? Address { get; set; }
+        public string? ResourceName { get; set; }
         [Required]
         [Display(Name ="Входящий № поставщика")]
-        public string IncomingNum { get; set; }
+        public string? IncomingNum { get; set; }
         [Required]
         [Display(Name = "Дата регистрации заявки")]
         [DataType(DataType.Date)]
@@ -30,7 +30,7 @@ namespace ConnReq.Domain.Entities
         public DateTime? ContractDate { get; set; }
         [Display(Name ="Замечания к документам")]
         public string Remarks { get; set; }
-        public string LastUpdate { get; set; }
+        public string? LastUpdate { get; set; }
         public bool CanDeleted { get; set; }
         public RequestData() { Remarks = string.Empty; CanDeleted = false; }
     }

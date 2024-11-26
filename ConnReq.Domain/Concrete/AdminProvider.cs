@@ -18,13 +18,12 @@ namespace ConnReq.Domain.Concrete
                     + ",(select count(*) from resreq.provider p where p.factory = f.factory and p.resourcekind =1)"
                     + ",(select count(*) from resreq.provider p where p.factory = f.factory and p.resourcekind =2),t.name"
                     + " from resreq.factory f,resreq.territory t where f.territorywork = t.territory order by f.name";
-                    NpgsqlDataReader reader = null;
                     try
                     {
-                        reader = cmd.ExecuteReader();
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
-                            Provider data = new Provider();
+                            Provider data = new ();
                             if (!reader.IsDBNull(0))
                                 data.FactoryId = (int)reader.GetDecimal(0);
                             if (!reader.IsDBNull(1))
@@ -46,9 +45,9 @@ namespace ConnReq.Domain.Concrete
                             if (!reader.IsDBNull(9))
                                 data.Upto = reader.GetDateTime(9);
                             if (!reader.IsDBNull(10))
-                                data.Warm = reader.GetDecimal(10) == 1 ? true : false;
+                                data.Warm = reader.GetDecimal(10) == 1;
                             if (!reader.IsDBNull(11))
-                                data.Water = reader.GetDecimal(11) == 1 ? true : false;
+                                data.Water = reader.GetDecimal(11) == 1;
                             if (!reader.IsDBNull(12))
                                 data.TerritoryName = reader.GetString(12);
                                 list.Add(data);
@@ -60,11 +59,6 @@ namespace ConnReq.Domain.Concrete
                     }
                     finally
                     {
-                        if (reader != null)
-                        {
-                            reader.Close();
-                            reader.Dispose();
-                        }
                         cmd.Dispose();
                     }
                 }
