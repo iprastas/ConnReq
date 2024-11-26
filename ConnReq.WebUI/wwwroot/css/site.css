@@ -1,39 +1,21 @@
-html {
-  font-size: 14px;
+﻿/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-.container {
-    margin-left: 0px;
-    margin-right: 0px;
-    /*increase width as per your need*/
-    max-width: 1800px;
-    max-height: 80vh;
-}
-.sgrid_container {
-    height: 72vh;
-    width: 100%;
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
 }
 .sgrid_caption {
     font: bold 16pt arial, verdana;
@@ -44,6 +26,41 @@ body {
     border-right: 1px solid #6D6D6D;
     border-bottom: 1px solid #6D6D6D;
     border-radius: 3px;
+}
+div.tableContainer {
+    height: 450px;
+    width: 100%;
+    display:block;
+}
+div.sgrid_container {
+    height: 550px;
+    width: 100%;
+}
+table style
+table {
+    background-color: #eee;
+    table-layout: fixed;
+    overflow: hidden;
+}
+thead {
+    display: table-header-group;
+}
+
+tbody {
+    background-color: #F1F1F1;
+    height: auto;
+    overflow: auto;
+    width: auto;
+}
+
+td {
+    word-wrap:break-word;
+    padding: 3px 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+tr:hover {
+    background: #598AF3;
 }
 table {
     border-width: 0;
@@ -88,7 +105,6 @@ table {
         border-left-width: 1px;
         border-color: #CCCCCC;
     }
-
 tr:hover {
     background: #598AF3;
 }

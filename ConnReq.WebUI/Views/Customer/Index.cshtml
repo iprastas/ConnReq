@@ -4,7 +4,12 @@
     Layout = "_Layout";
 }
 @section scripts {
-    <script src="~/js/fixTable.js"></script>
+    <environment include="Development">
+        <script src="~/js/fixTable.js" type="text/javascript" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/fixTable.min.js" type="text/javascript" asp-append-version="true"></script>
+    </environment>
 }
 <var id="siteRoot" hidden="hidden">@Url.Content("~")</var>
 <h3>@ViewBag.Title</h3>
