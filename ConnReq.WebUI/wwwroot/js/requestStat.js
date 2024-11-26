@@ -16,7 +16,7 @@
         readOnly: true
     });
     $('formReady.sgrid', function () {
-        $('#sgrid').tableHeadFixer({ 'left': 2 });
+        grid.tableHeadFixer({ 'left': 2 });
     });
     $("#sincedp").on('focusout', function (event) {
         since = $(event.target).val();
