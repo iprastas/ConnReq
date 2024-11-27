@@ -30,6 +30,7 @@ namespace ConnReq.WebUI
             builder.Services.AddScoped<ICustomerProvider, CustomerProvider>();
             builder.Services.AddScoped<IRequestDocProvider, RequestDocProvider>();
             builder.Services.AddScoped<INewRequestProvider,NewRequestProvider>();
+            builder.Services.AddScoped<IResponseProvider, ResponseProvider>();
 
             builder.Services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(24*60);
