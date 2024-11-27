@@ -1,10 +1,12 @@
 ﻿using ConnReq.Domain.Abstract;
 using ConnReq.Domain.Entities;
 using ConnReq.WebUI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConnReq.WebUI.Controllers
 {
+     [Authorize]
     public class ProviderController : Controller
     {
         IProviderRepository repository ;

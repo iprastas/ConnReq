@@ -8,7 +8,6 @@ using Npgsql;
 
 namespace ConnReq.WebUI.Controllers
 {
-    //[Authorize]
     public class RegistrationController : Controller
     {
         // GET: Registration
