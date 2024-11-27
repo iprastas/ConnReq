@@ -956,10 +956,10 @@
                     && $(selector).sgrid('getSettings', 'readOnly') === true
                     && $(selector).sgrid('getSettings', 'hasTreeColumn') === false)
                 {
-                    $('<i>').addClass('fa fa-sort').appendTo(th);
+                    $('<i>').addClass('bi bi-sort-down').appendTo(th);
                     var fc = $(selector).sgrid('getSettings', 'filterColumns');
                     if (fc!==null&&fc.indexOf(header.Columns[j]) >= 0)
-                        $('<i>').addClass('fa fa-filter').prependTo(th);
+                        $('<i>').addClass('bi bi-filter').prependTo(th);
                 }
             }
         }
@@ -1182,11 +1182,11 @@
             $(this).off('formReady.sgrid');
         });
         if ($(container).sgrid('getSettings', 'readOnly') === true && $(container).sgrid('getSettings', 'hasTreeColumn') === false) {
-            $('th i.fa').filter('.fa-sort', '.fa-sort-amount-asc', '.fa-sort-amount-desc')
+            $('th i.bi').filter('.bi-sort-down', '.bi-sort-down-alt')
                 .on('click',function (e) {
                 sortByColumn(e.currentTarget.parentNode.cellIndex, container);
             });
-            $('th i.fa-filter').on('click',function (e) {
+            $('th i.bi-filter').on('click',function (e) {
                 $(container).sgrid('initFilterDialog', e.currentTarget.parentElement.cellIndex, e.currentTarget.parentElement.innerText);
             });
         }
@@ -1368,20 +1368,19 @@
         var selector = container;
         var tableData = new Array();
         var sortAsc = true;
-        $('i.fa')
-            .filter('.fa-sort', '.fa-sort-amount-asc', '.fa-sort-amount-desc')
+        $('i.bi')
+            .filter('.bi-sort-down', '.bi-sort-down-alt','.bi-sort-up')
             .each(function (i) {
                 if (i === colIndex) {
                     var oldClass = 'h';
-                    if ($(this).hasClass('fa-sort-amount-asc')) oldClass = 'a';
-                    if ($(this).hasClass('fa-sort-amount-desc')) oldClass = 'd';
-                    $(this).removeClass('fa-sort-amount-asc fa-sort-amount-desc');
-                    if (oldClass === 'h' || oldClass === 'd') { $(this).addClass('fa-sort-amount-asc active'); sortAsc = true; }
-                    if (oldClass === 'a') { $(this).addClass('fa-sort-amount-desc active'); sortAsc = false; }
-                } else {
-                    $(this).removeClass()
-                        .addClass('header')
-                        .addClass('fa fa-sort');
+                    if ($(this).hasClass('bi-sort-up')) oldClass = 'a';
+                    if ($(this).hasClass('bi-sort-down-alt')) oldClass = 'd';
+                    $(this).removeClass('bi-sort-down bi-sort-down-alt bi-sort-up');
+                    if (oldClass === 'h' || oldClass === 'd') { $(this).addClass('bi-sort-up active'); sortAsc = true; }
+                    if (oldClass === 'a') { $(this).addClass('bi-sort-down-alt active'); sortAsc = false; }
+                } 
+                else {
+                    $(this).removeClass().addClass('bi bi-sort-down');
                  }
             });
 
