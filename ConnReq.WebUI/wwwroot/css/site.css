@@ -196,3 +196,7 @@ th span.glyphicon-sort-by-attributes-alt {
 th span.active {
     background-color: #8dbdd8;
 }
+
+.form-group {
+    padding-bottom: 10px;
+}

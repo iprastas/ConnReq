@@ -11,7 +11,7 @@
     </environment>
 }
 <h2>@ViewBag.Title</h2>
-<div class="tableContainer" style="overflow:auto;height:600px;">
+<div class="tableContainer" style="overflow:auto;height:650px;">
     <table class="table table-bordered table-hover" id="fixTable">
         <thead>
             <tr>
@@ -46,12 +46,12 @@
                     <td>@p.Upto</td>
                     <td>@if (p.Warm) { @Html.Label("+")}</td>
                     <td>@if (p.Water) { @Html.Label("+")}</td>
-                    <td>@Html.ActionLink("Изменить", "Edit","ProviderDetail",new { factory = p.FactoryId},new { @class= "glyphicon glyphicon-pencil btn btn-success" })</td>
+                    <td>@Html.ActionLink("Изменить", "Edit","ProviderDetail",new { factory = p.FactoryId},new { @class= "btn btn-success" })</td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
 <button class="btn" style="margin-top: 15px;">
-    @Html.ActionLink("Добавить", "Edit", "ProviderDetail", new { factory = 0 }, new { @class = "glyphicon glyphicon-plus btn btn-primary" })
+    @Html.ActionLink("Добавить", "Edit", "ProviderDetail", new { factory = 0 }, new { @class = "btn btn-primary" })
 </button>

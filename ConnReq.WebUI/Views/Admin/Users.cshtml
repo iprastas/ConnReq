@@ -13,7 +13,7 @@
 }
 <h2>@ViewBag.Title</h2>
 @if (Model.NotActiveItems!=null&&Model.NotActiveItems.Count > 0) { 
-<div class="tableContainer" style="overflow:auto;height:630px;">
+<div class="tableContainer" style="overflow:auto;height:700px;">
         <table class="table table-bordered table-hover" id="fixTable">
         <thead>
             <tr>
@@ -33,7 +33,7 @@
                     <td>@p.CustomerType</td>
                     <td>@p.NotActiveDays</td>
                     <td>
-                        @Html.ActionLink("Удалить", "Delete", "Admin", new { user = p.UserId }, new { @class = "glyphicon glyphicon-remove btn btn-danger" })
+                        @Html.ActionLink("Удалить", "Delete", "Admin", new { user = p.UserId }, new { @class = "btn btn-outline-danger" })
                     </td>
                 </tr>
             }

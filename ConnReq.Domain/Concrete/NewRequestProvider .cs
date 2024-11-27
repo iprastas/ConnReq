@@ -221,7 +221,7 @@ namespace ConnReq.Domain.Concrete
                 using NpgsqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "select email from resreq.factory f, resreq.provider p ,resreq.request r "
                     + " where f.factory = p.factory and p.provider = r.provider and r.request = :request";
-                cmd.Parameters.Add("provider", NpgsqlDbType.Integer).Value = request;
+                cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
                 try
                 {
                     NpgsqlDataReader reader = cmd.ExecuteReader();
@@ -246,7 +246,7 @@ namespace ConnReq.Domain.Concrete
             {
                 using NpgsqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "select trim(substr(u.login,1,30)) from resreq.request r,resreq.users u where r.USERS=u.USERS and r.request=:request";
-                cmd.Parameters.Add("request", NpgsqlDbType.Varchar).Value = request;
+                cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
                 try
                 {
                     NpgsqlDataReader reader = cmd.ExecuteReader();

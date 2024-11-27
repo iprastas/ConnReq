@@ -16,7 +16,7 @@
 <h3>@ViewBag.Title</h3>
 <var id="siteRoot" hidden="hidden">@Url.Content("~")</var>
 
-<div class="row form-group">
+<div class="row form-group" style="margin-bottom: 10px;">
     <div class="col-md-2">
         <div id="since" class="control" title="начало периода">
             <input type="date" class="form-control" id="sincedp" value="@DateTime.Now.Year.ToString()-01-01" />
@@ -37,12 +37,9 @@
         <input type="checkbox" class="form-check-input" id="showEmpty" />
         <label class="form-check-label" for="showEmpty">Скрыть пустые строки</label>
     </div>
-@*     <div class="col-md-2">
-        <input type="button" value="Читать" id="readbtn" />
-    </div> *@
 </div>
 
-<div class="row">
+<div class="row" style="overflow: auto;height: 670px;">
     <div id="grid" class="col-md-12"></div>
 </div>
 
