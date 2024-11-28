@@ -956,7 +956,7 @@
                     && $(selector).sgrid('getSettings', 'readOnly') === true
                     && $(selector).sgrid('getSettings', 'hasTreeColumn') === false)
                 {
-                    $('<i>').addClass('bi bi-sort-down').appendTo(th);
+                    $('<i>').addClass('bi bi-arrow-down-up').appendTo(th);
                     var fc = $(selector).sgrid('getSettings', 'filterColumns');
                     if (fc!==null&&fc.indexOf(header.Columns[j]) >= 0)
                         $('<i>').addClass('bi bi-filter').prependTo(th);
@@ -1182,7 +1182,7 @@
             $(this).off('formReady.sgrid');
         });
         if ($(container).sgrid('getSettings', 'readOnly') === true && $(container).sgrid('getSettings', 'hasTreeColumn') === false) {
-            $('th i.bi').filter('.bi-sort-down', '.bi-sort-down-alt')
+            $('th i.bi').filter('.bi-arrow-down-up', 'bi-sort-down','.bi-sort-down-alt')
                 .on('click',function (e) {
                 sortByColumn(e.currentTarget.parentNode.cellIndex, container);
             });
@@ -1369,18 +1369,25 @@
         var tableData = new Array();
         var sortAsc = true;
         $('i.bi')
-            .filter('.bi-sort-down', '.bi-sort-down-alt','.bi-sort-up')
             .each(function (i) {
                 if (i === colIndex) {
                     var oldClass = 'h';
-                    if ($(this).hasClass('bi-sort-up')) oldClass = 'a';
-                    if ($(this).hasClass('bi-sort-down-alt')) oldClass = 'd';
-                    $(this).removeClass('bi-sort-down bi-sort-down-alt bi-sort-up');
-                    if (oldClass === 'h' || oldClass === 'd') { $(this).addClass('bi-sort-up active'); sortAsc = true; }
-                    if (oldClass === 'a') { $(this).addClass('bi-sort-down-alt active'); sortAsc = false; }
+                    if ($(this).hasClass('bi-sort-down-alt')) 
+                        oldClass = 'a';
+                    if ($(this).hasClass('bi-sort-down')) 
+                        oldClass = 'd';
+                    $(this).removeClass('bi-sort-down bi-sort-down-alt');
+                    if (oldClass === 'h' || oldClass === 'd') { 
+                        $(this).addClass('bi bi-sort-down-alt active'); sortAsc = true; 
+                    }
+                    if (oldClass === 'a') { 
+                        $(this).addClass('bi bi-sort-down active'); sortAsc = false; 
+                    }
                 } 
                 else {
-                    $(this).removeClass().addClass('bi bi-sort-down');
+                    $(this)
+                    .removeClass()
+                    .addClass('bi bi-arrow-down-up');
                  }
             });
 
