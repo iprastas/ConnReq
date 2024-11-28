@@ -28,6 +28,7 @@ namespace ConnReq.WebUI.Controllers
             {
                 model.TerritoryWork = new SelectList(provider.GetTerritory(), "Value", "Text");
                 model.Territory = 3;
+                model.Since = DateTime.Now;
             }
             return View(model);
         }
