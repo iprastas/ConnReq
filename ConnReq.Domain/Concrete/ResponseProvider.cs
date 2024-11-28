@@ -78,7 +78,7 @@ namespace ConnReq.Domain.Concrete
             cmd.Parameters.Add(_rem);
 
             cmd.Parameters.AddWithValue("userName", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
-            cmd.Parameters.AddWithValue("request", NpgsqlTypes.NpgsqlDbType.Varchar, data.Request);
+            cmd.Parameters.AddWithValue("request", NpgsqlTypes.NpgsqlDbType.Integer, data.Request);
             try
             {
                 if (cmd.ExecuteNonQuery() > 0) return true;

@@ -12,32 +12,28 @@
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
-                    @Html.LabelFor(m => m.IncomingNum, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.IncomingNum, new { @class = "col control-label" })
                     <div class="col-md-10">
                         @Html.TextBoxFor(m => m.IncomingNum, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.IncomingNum, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.IncomingDate, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.IncomingDate, new { @class = "col control-label" })
                     <div class="col-md-10">
-                        <input type="date" value="@Model?.IncomingDate" name="IncomingDate" class="form-control" />
-
-                        @* @Html.TextBoxFor(m => m.IncomingDate, "{0:dd/MM/yyyy}", new { @class = "form-control" }) *@
+                        <input type="date" value="@(Model?.IncomingDate is null? null :  Model?.IncomingDate.Value.ToString("yyyy-MM-dd"))" name="IncomingDate" class="form-control" />
                         @Html.ValidationMessageFor(m => m.IncomingDate, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.ContractDate, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.ContractDate, new { @class = "col control-label" })
                     <div class="col-md-10">
-                        <input type="date" value="@Model?.ContractDate" name="ContractDate" class="form-control" />
-
-                        @* @Html.TextBoxFor(m => m.ContractDate, "{0:dd/MM/yyyy}", new { @class = "form-control" }) *@
+                        <input type="date" value="@(Model?.ContractDate is null? null :  Model?.ContractDate.Value.ToString("yyyy-MM-dd"))" name="ContractDate" class="form-control" />
                         @Html.ValidationMessageFor(m => m.ContractDate, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Remarks, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.Remarks, new { @class = "col control-label" })
                     <div class="col-md-10">
                         @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control" })
                     </div>

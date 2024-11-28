@@ -91,14 +91,14 @@
             <div class="form-group col-md-2">
                 @Html.LabelFor(m => m.Since, new { @class = "col control-label" })
                 <div class="col">
-                    <input type="date" value="@Model?.Since.ToString("yyyy-MM-dd")" name="Since" class="form-control" />
+                    <input type="date" value="@(Model.Since.ToString("yyyy-MM-dd"))" name="Since" class="form-control" />
                     @Html.ValidationMessageFor(m => m.Since, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group col-md-2">
                 @Html.LabelFor(m => m.Upto, new { @class = "col control-label" })
                 <div class="col">
-                    <input type="date" value="Model?.Upto.ToString("yyyy-MM-dd")" name="Upto" class="form-control"/>
+                    <input type="date" value="@(Model?.Upto is null? null :  Model?.Upto.Value.ToString("yyyy-MM-dd"))" name="Upto" class="form-control" />
                     @Html.ValidationMessageFor(m => m.Upto, "", new { @class = "text-danger" })
                 </div>
             </div>
