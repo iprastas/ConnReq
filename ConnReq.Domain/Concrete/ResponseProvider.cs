@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -154,28 +155,31 @@ namespace ConnReq.Domain.Concrete
         }
         public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
-                //string host = WebConfigurationManager.AppSettings["smtpHost"];
-                //string sport = WebConfigurationManager.AppSettings["smtpPort"];
-                //int port = 25;
-                //int.TryParse(sport, out port);
-                //string user = WebConfigurationManager.AppSettings["smtpUser"];
-                //string password = WebConfigurationManager.AppSettings["smtpPassword"];
-                //DB.SendMail(from, to, subject, body, host, port, user, password);
-            /*MailMessage message = new MailMessage(from, to, subject, body);
-            message.IsBodyHtml = true;
-            using (var smtp = new SmtpClient())
-            {
-                var credential = new System.Net.NetworkCredential
+            var sendMailThread = new Thread(() => {
+                var message = new MailMessage(new MailAddress(from), new MailAddress(to));
+
+                message.Subject = subject;
+                message.Body = body;
+                message.IsBodyHtml = true;
+                message.BodyEncoding = Encoding.UTF8;
+                message.HeadersEncoding = Encoding.UTF8;
+                using (var smtp = new SmtpClient())
                 {
-                    UserName = user,
-                    Password = password
-                };
-                smtp.Credentials = credential;
-                smtp.Host = host;
-                smtp.Port = port;
-                smtp.EnableSsl = true;
-                await smtp.SendMailAsync(message);
-            }*/
+                    var credential = new System.Net.NetworkCredential
+                    {
+                        UserName = user,
+                        Password = pwd
+                    };
+                    smtp.Credentials = credential;
+                    smtp.Host = host;
+                    smtp.Port = port;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.EnableSsl = true;
+                    smtp.Send(message);
+                }
+            });
+
+            sendMailThread.Start();
         }
     }
 }

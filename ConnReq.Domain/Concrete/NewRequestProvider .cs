@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using Npgsql;
 using NpgsqlTypes;
+using System.Net.Mail;
 using System.Text;
 
 namespace ConnReq.Domain.Concrete
@@ -270,22 +271,31 @@ namespace ConnReq.Domain.Concrete
         }
         public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
-            //string? host, sport="25", user, password;
-            //var section = configuration.GetSection("Mail");
-            //foreach (var el in section.GetChildren())
-            //{
-            //    switch(el.Key)
-            //    {
-            //        case "smtpHost": host = el.Value; break; 
-            //        case "smtpPort": sport = el.Value; break;
-            //        case "smtpUser": user = el.Value; break;
-            //        case "smtpPassword": password = el.Value; break;
-            //    }
-            //}
-            //int port = 25;
-            //_ = int.TryParse(sport, out port);
-            
-            //DB.SendMail(from, to, subject, body, host, port, user, password);
+            var sendMailThread = new Thread(() => {
+                var message = new MailMessage(new MailAddress(from), new MailAddress(to));
+
+                message.Subject = subject;
+                message.Body = body;
+                message.IsBodyHtml = true;
+                message.BodyEncoding = Encoding.UTF8;
+                message.HeadersEncoding = Encoding.UTF8;
+                using (var smtp = new SmtpClient())
+                {
+                    var credential = new System.Net.NetworkCredential
+                    {
+                        UserName = user,
+                        Password = pwd
+                    };
+                    smtp.Credentials = credential;
+                    smtp.Host = host;
+                    smtp.Port = port;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.EnableSsl = true;
+                    smtp.Send(message);
+                }
+            });
+
+            sendMailThread.Start();
 
         }
     }
