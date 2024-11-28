@@ -13,6 +13,6 @@ namespace ConnReq.Domain.Abstract
         bool UpdateRequestData(RequestData data, string userName);
         string GetCustomerEMail(int request);
         string GetMailBody(RequestData model);
-        void SendMail(string from, string to, string subject, string body);
+        void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd);
     }
 }

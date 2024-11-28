@@ -152,7 +152,7 @@ namespace ConnReq.Domain.Concrete
             }
             return sb.ToString();
         }
-        public void SendMail(string from, string to, string subject, string body)
+        public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
                 //string host = WebConfigurationManager.AppSettings["smtpHost"];
                 //string sport = WebConfigurationManager.AppSettings["smtpPort"];
