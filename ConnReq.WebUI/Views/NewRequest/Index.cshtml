@@ -36,8 +36,8 @@
     <div class="col-md-12">
         @using (Html.BeginForm("SaveDocument", "NewRequest", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-            <div id="docsTable" class="control" style="overflow:auto;height:500px;" title="Прилагаемые документы(размером не более 10МБ)"></div>
-            <input type="submit" class="btn btn-primary" name="UploadMultiply" id="SubmitMultiply" value="Отправить документы" hidden="hidden" />
+            <div id="docsTable" class="control" style="overflow:auto;height:600px;" title="Прилагаемые документы(размером не более 10МБ)"></div>
+            <input type="submit" class="btn btn-primary" name="UploadMultiply" id="SubmitMultiply" value="Отправить документы" hidden="hidden" style="margin-top: 20px;" />
         }
     </div>
 </div>
