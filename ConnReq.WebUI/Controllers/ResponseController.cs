@@ -6,22 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConnReq.WebUI.Controllers
 {
     [Authorize]
-    public class ResponseController : Controller
+    public class ResponseController(IResponseProvider p, IConfiguration conf) : Controller
     {
-        private IResponseProvider provider;
-        private IConfiguration configuration;
-        public ResponseController(IResponseProvider p,IConfiguration conf)
-        {
-            provider = p;
-            configuration = conf;
-        }
-
         public ActionResult Index(int request)
         {
             UserSettings settings = new();
             settings.Restore(Request);
             ViewBag.User = settings.UserName;
-            RequestData model = provider.GetRequestData(request);
+            RequestData model = p.GetRequestData(request);
             model.IncomingDate = DateTime.Now;
             return View(model);
         }
@@ -30,10 +22,10 @@ namespace ConnReq.WebUI.Controllers
         {
             UserSettings settings = new();
             settings.Restore(Request);
-            if (ModelState.IsValid && provider.UpdateRequestData(model, settings.UserName))
+            if (ModelState.IsValid && p.UpdateRequestData(model, settings.UserName))
             {
                 string? host="", sport = "25", user="", password = "";
-                var section = configuration.GetSection("Mail");
+                var section = conf.GetSection("Mail");
                 foreach (var el in section.GetChildren())
                 {
                     switch (el.Key)
@@ -47,10 +39,10 @@ namespace ConnReq.WebUI.Controllers
                 _ = int.TryParse(sport, out int port);
                 try
                 {
-                    provider.SendMail(settings.EMail
-                        , provider.GetCustomerEMail(model.Request)
+                    p.SendMail(settings.EMail
+                        , p.GetCustomerEMail(model.Request)
                         , "Заявка №" + model.Request
-                        , provider.GetMailBody(model)
+                        , p.GetMailBody(model)
                         , host, port, user, password);
                 }
                 catch (Exception ex)

@@ -16,15 +16,14 @@ namespace ConnReq.Domain.Concrete
     {
         public RequestData GetRequestData(int request)
         {
-            RequestData data = new RequestData() { Request = request };
+            RequestData data = new() { Request = request };
             using NpgsqlConnection conn = PgDb.GetOpenConnection();
             using NpgsqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "select incomingnum,incomingdate,contractdate,remarks from resreq.request r where r.request=:request";
             cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
-            NpgsqlDataReader reader = null;
             try
             {
-                reader = cmd.ExecuteReader();
+                NpgsqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     if (!reader.IsDBNull(0))
@@ -36,6 +35,7 @@ namespace ConnReq.Domain.Concrete
                     if (!reader.IsDBNull(3))
                         data.Remarks = reader.GetString(3);
                 }
+                reader.Close();
             }
             catch (NpgsqlException ex)
             {
@@ -43,11 +43,6 @@ namespace ConnReq.Domain.Concrete
             }
             finally
             {
-                if (reader != null)
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
                 cmd.Dispose();
             }
             return data;
@@ -125,7 +120,7 @@ namespace ConnReq.Domain.Concrete
         }
         public string GetMailBody(RequestData model)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             if (model.Remarks != null && model.Remarks.Length > 0)
             {
                 sb.Append("<!DOCTYPE HTML><html><header></header><body><p><i>");
@@ -156,27 +151,26 @@ namespace ConnReq.Domain.Concrete
         public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
             var sendMailThread = new Thread(() => {
-                var message = new MailMessage(new MailAddress(from), new MailAddress(to));
-
-                message.Subject = subject;
-                message.Body = body;
-                message.IsBodyHtml = true;
-                message.BodyEncoding = Encoding.UTF8;
-                message.HeadersEncoding = Encoding.UTF8;
-                using (var smtp = new SmtpClient())
+                var message = new MailMessage(new MailAddress(from), new MailAddress(to))
                 {
-                    var credential = new System.Net.NetworkCredential
-                    {
-                        UserName = user,
-                        Password = pwd
-                    };
-                    smtp.Credentials = credential;
-                    smtp.Host = host;
-                    smtp.Port = port;
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.EnableSsl = true;
-                    smtp.Send(message);
-                }
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true,
+                    BodyEncoding = Encoding.UTF8,
+                    HeadersEncoding = Encoding.UTF8
+                };
+                using var smtp = new SmtpClient();
+                var credential = new System.Net.NetworkCredential
+                {
+                    UserName = user,
+                    Password = pwd
+                };
+                smtp.Credentials = credential;
+                smtp.Host = host;
+                smtp.Port = port;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.EnableSsl = true;
+                smtp.Send(message);
             });
 
             sendMailThread.Start();

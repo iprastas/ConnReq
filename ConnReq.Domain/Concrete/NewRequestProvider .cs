@@ -272,27 +272,26 @@ namespace ConnReq.Domain.Concrete
         public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
             var sendMailThread = new Thread(() => {
-                var message = new MailMessage(new MailAddress(from), new MailAddress(to));
-
-                message.Subject = subject;
-                message.Body = body;
-                message.IsBodyHtml = true;
-                message.BodyEncoding = Encoding.UTF8;
-                message.HeadersEncoding = Encoding.UTF8;
-                using (var smtp = new SmtpClient())
+                var message = new MailMessage(new MailAddress(from), new MailAddress(to))
                 {
-                    var credential = new System.Net.NetworkCredential
-                    {
-                        UserName = user,
-                        Password = pwd
-                    };
-                    smtp.Credentials = credential;
-                    smtp.Host = host;
-                    smtp.Port = port;
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.EnableSsl = true;
-                    smtp.Send(message);
-                }
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true,
+                    BodyEncoding = Encoding.UTF8,
+                    HeadersEncoding = Encoding.UTF8
+                };
+                using var smtp = new SmtpClient();
+                var credential = new System.Net.NetworkCredential
+                {
+                    UserName = user,
+                    Password = pwd
+                };
+                smtp.Credentials = credential;
+                smtp.Host = host;
+                smtp.Port = port;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.EnableSsl = true;
+                smtp.Send(message);
             });
 
             sendMailThread.Start();
