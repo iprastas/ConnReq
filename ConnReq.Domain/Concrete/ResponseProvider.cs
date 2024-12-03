@@ -1,12 +1,13 @@
 ﻿using ConnReq.Domain.Abstract;
 using ConnReq.Domain.Entities;
+using MimeKit;
+using MailKit.Net.Smtp;
 using Npgsql;
 using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,13 +62,13 @@ namespace ConnReq.Domain.Concrete
 
             NpgsqlParameter _indate = new("indate", NpgsqlDbType.Date)
             {
-                Value = data.IncomingDate
+                Value = data.IncomingDate == null ? DBNull.Value : data.IncomingDate
             };
             cmd.Parameters.Add(_indate);
 
             NpgsqlParameter _contrdate = new("contrdate", NpgsqlDbType.Date)
             {
-                Value = data.ContractDate
+                Value = data.ContractDate == null? DBNull.Value : data.ContractDate
             };
             cmd.Parameters.Add(_contrdate);
 
@@ -150,30 +151,27 @@ namespace ConnReq.Domain.Concrete
         }
         public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
-            var sendMailThread = new Thread(() => {
-                var message = new MailMessage(new MailAddress(from), new MailAddress(to))
-                {
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = true,
-                    BodyEncoding = Encoding.UTF8,
-                    HeadersEncoding = Encoding.UTF8
-                };
-                using var smtp = new SmtpClient();
-                var credential = new System.Net.NetworkCredential
-                {
-                    UserName = user,
-                    Password = pwd
-                };
-                smtp.Credentials = credential;
-                smtp.Host = host;
-                smtp.Port = port;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtp.EnableSsl = true;
-                smtp.Send(message);
-            });
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("iprastas@yandex.ru", "lermontovaalisia@yandex.ru")); //заменить на реальное потом
+                                                                                                      //первый адрес - от которого отправляется, в этом случае от человека провайдеру
+                                                                                                      // второй - адрес посредник с паролем для приложения
+            message.To.Add(new MailboxAddress("", "britani.Sivil@yandex.ru")); //заменить на реальное потом
+                                                                               // первое - обращение, второе - адрес получателя 
+            message.Subject = subject; // тема письма
 
-            sendMailThread.Start();
+            message.Body = new TextPart("html")
+            {
+                Text = body
+            };
+
+            using var client = new SmtpClient();
+            client.Connect("smtp.yandex.ru", 587, false);
+
+            client.Authenticate("lermontovaalisia@yandex.ru", "utujlweaoulugaeu"); //заменить на реальное потом
+                                                                                   //   gvayahjbtldroqvb
+                                                                                   // почта с паролем для приложения и сгенерированный пароль
+            client.Send(message);
+            client.Disconnect(true);
         }
     }
 }
