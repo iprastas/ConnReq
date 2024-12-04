@@ -24,7 +24,7 @@ namespace ConnReq.WebUI.Controllers
             settings.Restore(Request);
             if (ModelState.IsValid && p.UpdateRequestData(model, settings.UserName))
             {
-                string? host="", sport = "25", user="", password = "";
+                string? host="", sport = "587", user="", password = "";
                 var section = conf.GetSection("Mail");
                 foreach (var el in section.GetChildren())
                 {

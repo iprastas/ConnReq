@@ -1,15 +1,10 @@
 ﻿using ConnReq.Domain.Abstract;
 using ConnReq.Domain.Entities;
-using MimeKit;
 using MailKit.Net.Smtp;
+using MimeKit;
 using Npgsql;
 using NpgsqlTypes;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ConnReq.Domain.Concrete
 {
@@ -152,10 +147,10 @@ namespace ConnReq.Domain.Concrete
         public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("iprastas@yandex.ru", "lermontovaalisia@yandex.ru")); //заменить на реальное потом
+            message.From.Add(new MailboxAddress(from, user)); //заменить на реальное потом
                                                                                                       //первый адрес - от которого отправляется, в этом случае от человека провайдеру
                                                                                                       // второй - адрес посредник с паролем для приложения
-            message.To.Add(new MailboxAddress("", "britani.Sivil@yandex.ru")); //заменить на реальное потом
+            message.To.Add(new MailboxAddress("", to)); //заменить на реальное потом
                                                                                // первое - обращение, второе - адрес получателя 
             message.Subject = subject; // тема письма
 
@@ -165,9 +160,9 @@ namespace ConnReq.Domain.Concrete
             };
 
             using var client = new SmtpClient();
-            client.Connect("smtp.yandex.ru", 587, false);
+            client.Connect(host, port, false);
 
-            client.Authenticate("lermontovaalisia@yandex.ru", "utujlweaoulugaeu"); //заменить на реальное потом
+            client.Authenticate(user, pwd); //заменить на реальное потом
                                                                                    //   gvayahjbtldroqvb
                                                                                    // почта с паролем для приложения и сгенерированный пароль
             client.Send(message);

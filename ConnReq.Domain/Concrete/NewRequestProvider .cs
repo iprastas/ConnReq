@@ -1,8 +1,5 @@
 ﻿using ConnReq.Domain.Abstract;
 using ConnReq.Domain.Entities;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 using Npgsql;
 using NpgsqlTypes;
 using System.Net.Mail;
