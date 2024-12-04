@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.OutputCaching;
 using MimeKit;
 using MailKit;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Hosting;
+using Org.BouncyCastle.Utilities;
 
 
 namespace ConnReq.WebUI.Controllers
@@ -108,8 +110,21 @@ namespace ConnReq.WebUI.Controllers
             return Json(ret);
         }
         [HttpPost]
-        public ActionResult SaveDocument(ICollection<IFormFile> fileUpload)
+        public ActionResult SaveDocument(ICollection<IFormFile> fileUpload, IConfiguration config)
         {
+            string? host = "", sport = "587", user = "", password = "";
+            var section = config.GetSection("Mail");
+            foreach (var el in section.GetChildren())
+            {
+                switch (el.Key)
+                {
+                    case "smtpHost": host = el.Value; break;
+                    case "smtpPort": sport = el.Value; break;
+                    case "smtpUser": user = el.Value; break;
+                    case "smtpPassword": password = el.Value; break;
+                }
+            }
+            _ = int.TryParse(sport, out int port);
             bool canSendEMail = true;
             UserSettings settings = new UserSettings();settings.Restore(Request);
             ControlsState state = new ControlsState();state.Restore(Request);
@@ -128,11 +143,9 @@ namespace ConnReq.WebUI.Controllers
             if (canSendEMail)
             {
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("iprastas@yandex.ru", "lermontovaalisia@yandex.ru")); //заменить на реальное потом
-                //первый адрес - от которого отправляется, в этом случае от человека провайдеру
+                message.From.Add(new MailboxAddress("iprastas@yandex.ru", user));//первый адрес - от которого отправляется
                 // второй - адрес посредник с паролем для приложения
-                message.To.Add(new MailboxAddress("", "britani.Sivil@yandex.ru")); //заменить на реальное потом
-                // первое - обращение, второе - адрес получателя 
+                message.To.Add(new MailboxAddress("", "britani.Sivil@yandex.ru")); // первое - обращение, второе - адрес получателя 
                 message.Subject = "Заявка №" + state.Request; // тема письма
 
                 message.Body = new TextPart("html")
@@ -143,11 +156,9 @@ namespace ConnReq.WebUI.Controllers
                 try
                 {
                     using var client = new SmtpClient();
-                    client.Connect("smtp.yandex.ru", 587, false);
+                    client.Connect(host, port, false);
 
-                    client.Authenticate("lermontovaalisia@yandex.ru", "utujlweaoulugaeu"); //заменить на реальное потом
-                                                       //   gvayahjbtldroqvb
-                                                       // почта с паролем для приложения и сгенерированный пароль
+                    client.Authenticate(user, password); // почта с паролем для приложения и сгенерированный пароль
                     client.Send(message);
                     client.Disconnect(true);
                 }
