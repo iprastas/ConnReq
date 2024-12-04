@@ -141,11 +141,9 @@ namespace ConnReq.Domain.Concrete
         public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(from, user)); //заменить на реальное потом
-                                                                                                      //первый адрес - от которого отправляется, в этом случае от человека провайдеру
-                                                                                                      // второй - адрес посредник с паролем для приложения
-            message.To.Add(new MailboxAddress("", to)); //заменить на реальное потом
-                                                                               // первое - обращение, второе - адрес получателя 
+            message.From.Add(new MailboxAddress(from, user)); //первый адрес - от которого отправляется
+                                                              // второй - адрес посредник с паролем для приложения
+            message.To.Add(new MailboxAddress("", to)); // первое - обращение, второе - адрес получателя 
             message.Subject = subject; // тема письма
 
             message.Body = new TextPart("html")
@@ -156,9 +154,7 @@ namespace ConnReq.Domain.Concrete
             using var client = new SmtpClient();
             client.Connect(host, port, false);
 
-            client.Authenticate(user, pwd); //заменить на реальное потом
-                                                                                   //   gvayahjbtldroqvb
-                                                                                   // почта с паролем для приложения и сгенерированный пароль
+            client.Authenticate(user, pwd); // почта с паролем для приложения и сгенерированный пароль
             client.Send(message);
             client.Disconnect(true);
         }

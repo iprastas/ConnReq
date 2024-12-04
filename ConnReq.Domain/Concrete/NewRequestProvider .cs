@@ -1,8 +1,9 @@
 ﻿using ConnReq.Domain.Abstract;
 using ConnReq.Domain.Entities;
+using MimeKit;
+using MailKit.Net.Smtp;
 using Npgsql;
 using NpgsqlTypes;
-using System.Net.Mail;
 using System.Text;
 
 namespace ConnReq.Domain.Concrete
@@ -268,32 +269,23 @@ namespace ConnReq.Domain.Concrete
         }
         public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
-            var sendMailThread = new Thread(() =>
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(from, user)); //первый адрес - от которого отправляется
+                                                              // второй - адрес посредник с паролем для приложения
+            message.To.Add(new MailboxAddress("", to)); // первое - обращение, второе - адрес получателя 
+            message.Subject = subject; // тема письма
+
+            message.Body = new TextPart("html")
             {
-                var message = new MailMessage(new MailAddress(from), new MailAddress(to))
-                {
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = true,
-                    BodyEncoding = Encoding.UTF8,
-                    HeadersEncoding = Encoding.UTF8
-                };
-                using var smtp = new SmtpClient();
-                var credential = new System.Net.NetworkCredential
-                {
-                    UserName = user,
-                    Password = pwd
-                };
-                smtp.Credentials = credential;
-                smtp.Host = host;
-                smtp.Port = port;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtp.EnableSsl = true;
-                smtp.Send(message);
-            });
+                Text = body
+            };
 
-            sendMailThread.Start();
+            using var client = new SmtpClient();
+            client.Connect(host, port, false);
 
+            client.Authenticate(user, pwd); // почта с паролем для приложения и сгенерированный пароль
+            client.Send(message);
+            client.Disconnect(true);
         }
     }
 }
