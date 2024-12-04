@@ -110,10 +110,10 @@ namespace ConnReq.WebUI.Controllers
             return Json(ret);
         }
         [HttpPost]
-        public ActionResult SaveDocument(ICollection<IFormFile> fileUpload, IConfiguration config)
+        public ActionResult SaveDocument(ICollection<IFormFile> fileUpload)
         {
             string? host = "", sport = "587", user = "", password = "";
-            var section = config.GetSection("Mail");
+            var section = configuration.GetSection("Mail");
             foreach (var el in section.GetChildren())
             {
                 switch (el.Key)
@@ -142,25 +142,12 @@ namespace ConnReq.WebUI.Controllers
              }
             if (canSendEMail)
             {
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("iprastas@yandex.ru", user));//первый адрес - от которого отправляется
-                // второй - адрес посредник с паролем для приложения
-                message.To.Add(new MailboxAddress("", "britani.Sivil@yandex.ru")); // первое - обращение, второе - адрес получателя 
-                message.Subject = "Заявка №" + state.Request; // тема письма
-
-                message.Body = new TextPart("html")
-                {
-                    Text = provider.GetMailBody(state.Request)
-                };
-
                 try
                 {
-                    using var client = new SmtpClient();
-                    client.Connect(host, port, false);
-
-                    client.Authenticate(user, password); // почта с паролем для приложения и сгенерированный пароль
-                    client.Send(message);
-                    client.Disconnect(true);
+                    provider.SendMail(settings.EMail
+                        , provider.GetFactoryEMail(state.Request)
+                        , "Заявка №" + state.Request
+                        , provider.GetMailBody(state.Request), host, port, user, password);
                 }
                 catch (SmtpCommandException ex) { throw new MyException(-1, ex.Message); }
             }
