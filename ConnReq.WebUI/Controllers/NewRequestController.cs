@@ -5,8 +5,10 @@ using ConnReq.WebUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
-using System.Net;
-using System.Net.Mail;
+using MimeKit;
+using MailKit;
+using MailKit.Net.Smtp;
+
 
 namespace ConnReq.WebUI.Controllers
 {
@@ -125,28 +127,31 @@ namespace ConnReq.WebUI.Controllers
              }
             if (canSendEMail)
             {
-                string? host="", sport = "25", user="", password = "";
-                var section = configuration.GetSection("Mail");
-                foreach (var el in section.GetChildren())
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("iprastas@yandex.ru", "lermontovaalisia@yandex.ru")); //заменить на реальное потом
+                //первый адрес - от которого отправляется, в этом случае от человека провайдеру
+                // второй - адрес посредник с паролем для приложения
+                message.To.Add(new MailboxAddress("", "britani.Sivil@yandex.ru")); //заменить на реальное потом
+                // первое - обращение, второе - адрес получателя 
+                message.Subject = "Заявка №" + state.Request; // тема письма
+
+                message.Body = new TextPart("html")
                 {
-                    switch (el.Key)
-                    {
-                        case "smtpHost": host = el.Value; break;
-                        case "smtpPort": sport = el.Value; break;
-                        case "smtpUser": user = el.Value; break;
-                        case "smtpPassword": password = el.Value; break;
-                    }
-                }
-                _ = int.TryParse(sport, out int port);
+                    Text = provider.GetMailBody(state.Request)
+                };
+
                 try
                 {
-                    provider.SendMail(settings.EMail
-                        , provider.GetFactoryEMail(state.Request)
-                        , "Заявка №" + state.Request
-                        , provider.GetMailBody(state.Request)
-                        , host, port, user, password);
+                    using var client = new SmtpClient();
+                    client.Connect("smtp.yandex.ru", 587, false);
+
+                    client.Authenticate("lermontovaalisia@yandex.ru", "utujlweaoulugaeu"); //заменить на реальное потом
+                                                       //   gvayahjbtldroqvb
+                                                       // почта с паролем для приложения и сгенерированный пароль
+                    client.Send(message);
+                    client.Disconnect(true);
                 }
-                catch (SmtpException ex) { throw new MyException(-1, ex.Message); }
+                catch (SmtpCommandException ex) { throw new MyException(-1, ex.Message); }
             }
             return RedirectToRoute(new
             {
