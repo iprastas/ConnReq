@@ -32,5 +32,11 @@
       "wwwroot/js/controls/spin.js",
       "wwwroot/js/controls/tableHeadFixer.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/newRequest.min.js",
+    "inputFiles": [
+      "wwwroot/js/newRequest.js"
+    ]
   }
 ]
