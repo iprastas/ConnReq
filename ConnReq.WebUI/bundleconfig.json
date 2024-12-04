@@ -1,15 +1,5 @@
 [
   {
-    "outputFileName": "wwwroot/js/controls/bundle.js",
-    "inputFiles": [
-      "wwwroot/js/controls/jquery.docsTable.js",
-      "wwwroot/js/controls/jquery.sgrid-1.4.1.js",
-      "wwwroot/js/controls/jquery.slistbox-1.3.2.js",
-      "wwwroot/js/controls/spin.js",
-      "wwwroot/js/controls/tableHeadFixer.js"
-    ]
-  },
-  {
     "outputFileName": "wwwroot/js/requestStat.min.js",
     "inputFiles": [
       "wwwroot/js/requestStat.js"
@@ -31,6 +21,16 @@
     "outputFileName": "wwwroot/js/fixTable.min.js",
     "inputFiles": [
       "wwwroot/js/fixTable.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/controls/bundle.js",
+    "inputFiles": [
+      "wwwroot/js/controls/jquery.docsTable.js",
+      "wwwroot/js/controls/jquery.sgrid-1.4.1.js",
+      "wwwroot/js/controls/jquery.slistbox-1.3.2.js",
+      "wwwroot/js/controls/spin.js",
+      "wwwroot/js/controls/tableHeadFixer.js"
     ]
   }
 ]
