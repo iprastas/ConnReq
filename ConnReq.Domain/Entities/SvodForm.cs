@@ -145,7 +145,7 @@ namespace ConnReq.Domain.Entities
         {
             if (!HeaderRows.Contains(cell.Row)) HeaderRows.Add(cell.Row);
             if (!Columns.Contains(cell.Column)) Columns.Add(cell.Column);
-            Header.Add(cell.Row + delimiter + cell.Column, new HeaderCell(cell.Row, cell.Column, cell.Value));
+            Header.Add(cell.Row + delimiter + cell.Column, new HeaderCell(cell.Row, cell.Column, cell.Value ?? ""));
         }
         public void AddCell(FormCell cell)
         {

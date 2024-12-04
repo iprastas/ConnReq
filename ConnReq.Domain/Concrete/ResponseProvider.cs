@@ -93,10 +93,9 @@ namespace ConnReq.Domain.Concrete
             using NpgsqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "select u.email from resreq.request r,resreq.users u where r.users=u.users and r.request=:request";
             cmd.Parameters.Add("request", NpgsqlDbType.Integer).Value = request;
-            NpgsqlDataReader reader = null;
             try
             {
-                reader = cmd.ExecuteReader();
+                NpgsqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read()) ret = reader.GetString(0);
             }
             catch (NpgsqlException ex)
@@ -105,11 +104,6 @@ namespace ConnReq.Domain.Concrete
             }
             finally
             {
-                if (reader != null)
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
                 cmd.Dispose();
             }
             return ret;

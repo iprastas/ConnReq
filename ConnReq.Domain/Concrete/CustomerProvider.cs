@@ -26,7 +26,7 @@ namespace ConnReq.Domain.Concrete
                 NpgsqlDataReader  reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    RequestData request = new RequestData();
+                    RequestData request = new();
                     if (!reader.IsDBNull(0))
                         request.Request = (int)reader.GetDecimal(0);
                     if (!reader.IsDBNull(1))

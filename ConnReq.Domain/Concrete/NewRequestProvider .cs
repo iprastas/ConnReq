@@ -8,12 +8,12 @@ using System.Text;
 namespace ConnReq.Domain.Concrete
 {
     public class NewRequestProvider : INewRequestProvider
-        {
+    {
         public List<ListItem> GetResourceKind()
         {
             List<ListItem> list = [];
             int kind = 0; string name = string.Empty;
-            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            using (NpgsqlConnection conn = PgDb.GetOpenConnection())
             {
                 using NpgsqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "select resourcekind,name from resreq.resourcekind order by 1";
@@ -46,10 +46,10 @@ namespace ConnReq.Domain.Concrete
             }
             return list;
         }
-        public List<ListItem> GetProviders(int resourceKind,int territory)
+        public List<ListItem> GetProviders(int resourceKind, int territory)
         {
             List<ListItem> list = [];
-            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            using (NpgsqlConnection conn = PgDb.GetOpenConnection())
             {
                 using NpgsqlCommand cmd = conn.CreateCommand();
                 StringBuilder sb = new("select p.provider,f.name||' ('||k.name||')' from resreq.provider p,resreq.factory f, resreq.resourceKind k ");
@@ -95,7 +95,7 @@ namespace ConnReq.Domain.Concrete
         public List<ListItem> GetTerritory()
         {
             List<ListItem> list = [];
-            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            using (NpgsqlConnection conn = PgDb.GetOpenConnection())
             {
                 using NpgsqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "select t.territory,t.name from resreq.territory t order by nmb";
@@ -124,10 +124,10 @@ namespace ConnReq.Domain.Concrete
             }
             return list;
         }
-        public List<DocTempl> GetDocuments( int customerType, int request)
+        public List<DocTempl> GetDocuments(int customerType, int request)
         {
             List<DocTempl> documents = [];
-            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            using (NpgsqlConnection conn = PgDb.GetOpenConnection())
             {
                 using NpgsqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "select d.ordernmb,d.name from resreq.REQUESTDOCTEMPL d,resreq.request r,resreq.provider p "
@@ -162,7 +162,7 @@ namespace ConnReq.Domain.Concrete
             return documents;
 
         }
-        public int SaveRequest(int customer,int provider,string userName)
+        public int SaveRequest(int customer, int provider, string userName)
         {
             using NpgsqlConnection conn = PgDb.GetOpenConnection();
             using NpgsqlCommand cmd = conn.CreateCommand();
@@ -214,7 +214,7 @@ namespace ConnReq.Domain.Concrete
         public string GetFactoryEMail(int request)
         {
             string email = string.Empty;
-            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            using (NpgsqlConnection conn = PgDb.GetOpenConnection())
             {
                 using NpgsqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "select email from resreq.factory f, resreq.provider p ,resreq.request r "
@@ -239,8 +239,8 @@ namespace ConnReq.Domain.Concrete
         }
         public string GetMailBody(int request)
         {
-            string CustomerName=string.Empty;
-            using(NpgsqlConnection conn = PgDb.GetOpenConnection())
+            string CustomerName = string.Empty;
+            using (NpgsqlConnection conn = PgDb.GetOpenConnection())
             {
                 using NpgsqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "select trim(substr(u.login,1,30)) from resreq.request r,resreq.users u where r.USERS=u.USERS and r.request=:request";
@@ -268,7 +268,8 @@ namespace ConnReq.Domain.Concrete
         }
         public void SendMail(string from, string to, string subject, string body, string? host, int port, string? user, string? pwd)
         {
-            var sendMailThread = new Thread(() => {
+            var sendMailThread = new Thread(() =>
+            {
                 var message = new MailMessage(new MailAddress(from), new MailAddress(to))
                 {
                     Subject = subject,

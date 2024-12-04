@@ -33,7 +33,7 @@ namespace ConnReq.WebUI.Controllers
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, model.UserName)
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, model.UserName ?? "")
                 };
                 var claimsIdentity = new ClaimsIdentity( claims, CookieAuthenticationDefaults.AuthenticationScheme);
 

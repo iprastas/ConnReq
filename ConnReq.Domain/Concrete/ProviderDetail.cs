@@ -100,7 +100,7 @@ namespace ConnReq.Domain.Concrete
                     try
                     {
                         cmd.ExecuteNonQuery();
-                        p.FactoryId = (int)cmd.Parameters["nfactory"].Value;
+                        p.FactoryId = (int)(cmd.Parameters["nfactory"].Value??0);
                     }
                     catch(NpgsqlException ex)
                     {
