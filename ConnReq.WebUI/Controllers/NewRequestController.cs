@@ -126,14 +126,14 @@ namespace ConnReq.WebUI.Controllers
             }
             _ = int.TryParse(sport, out int port);
             bool canSendEMail = true;
-            UserSettings settings = new UserSettings();settings.Restore(Request);
-            ControlsState state = new ControlsState();state.Restore(Request);
+            UserSettings settings = new();  settings.Restore(Request);
+            ControlsState state = new();    state.Restore(Request);
             int i = 0;
-            foreach (var file in fileUpload)
+            foreach (var file in Request.Form.Files)
             {
                 if (file == null) continue;
                 byte[] bytes = new byte[file.Length];
-                using(MemoryStream ms = new MemoryStream())
+                using(MemoryStream ms = new ())
                 {
                     file.CopyTo(ms);
                     ms.Read(bytes, 0, bytes.Length);
