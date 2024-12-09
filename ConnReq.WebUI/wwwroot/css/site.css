@@ -28,7 +28,7 @@ textarea {
     border-radius: 3px;
 }
 div.tableContainer {
-    height: 450px;
+    height: 70vh;
     width: 100%;
     display:block;
 }
